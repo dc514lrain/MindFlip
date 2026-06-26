@@ -1,6 +1,6 @@
 {
-  "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
+  "miniprogramRoot": "miniprogram/",
   "setting": {
     "urlCheck": false,
     "es6": true,
@@ -10,7 +10,7 @@
     "minified": true,
     "newFeature": true,
     "coverView": true,
-    "nodeModules": true,
+    "nodeModules": false,
     "autoAudits": false,
     "showShadowRootInWxmlPanel": true,
     "scopeDataCheck": false,
@@ -31,8 +31,9 @@
     "packNpmManually": true,
     "packNpmRelationList": [
       {
-        "packageJsonPath": "./package.json",
-        "miniprogramNpmDir": "miniprogram"
+        "packageJsonPath": "./miniprogram/package.json",
+        "miniprogramNpmDir": "./miniprogram",
+        "miniprogramNpmDistDir": "./miniprogram"
       }
     ],
     "bundle": false,
@@ -41,14 +42,19 @@
   "appid": "wxf80d3193e000946f",
   "projectname": "MindFlip",
   "libVersion": "3.0.0",
+  "cloudfunctionRoot": "cloudfunctions/",
   "condition": {
     "miniprogram": {
       "list": []
     }
   },
-  "srcMiniprogramRoot": "miniprogram/",
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
+  },
+  "cloudbaseExtension": {
+    "extAppid": "wxf80d3193e000946f",
+    "cloudBaseExtensionRoot": "cloudbaserc",
+    "version": "1.0.0"
   }
 }

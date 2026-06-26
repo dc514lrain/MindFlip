@@ -1,7 +1,4 @@
 {
-  "permissions": {
-    "openapi": ["subscribeMessage.send"]
-  },
   "triggers": [
     {
       "name": "daily_inbox_push",

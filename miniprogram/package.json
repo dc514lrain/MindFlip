@@ -1,0 +1,10 @@
+{
+  "name": "mindflip-miniprogram",
+  "version": "1.0.0",
+  "description": "MindFlip 小程序端",
+  "main": "index.js",
+  "dependencies": {
+    "mobx-miniprogram": "^6.0.0",
+    "mobx-miniprogram-bindings": "^3.0.0"
+  }
+}
