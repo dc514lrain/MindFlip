@@ -1,0 +1,63 @@
+/* VIP 功能门控组件样式 */
+
+.vip-gate-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(250, 250, 248, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(4rpx);
+}
+
+.gate-card {
+  background: var(--color-bg-card, #fff);
+  border-radius: var(--radius-xl, 24rpx);
+  padding: var(--spacing-xxl, 48rpx) var(--spacing-xl, 32rpx);
+  width: 600rpx;
+  max-width: 85vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md, 16rpx);
+  box-shadow: var(--shadow-float, 0 12rpx 48rpx rgba(0,0,0,0.16));
+}
+
+.gate-icon { font-size: 96rpx; }
+
+.gate-title {
+  font-size: var(--font-size-xl, 36rpx);
+  font-weight: 800;
+  color: var(--color-primary, #1A1A1A);
+  text-align: center;
+}
+
+.gate-desc {
+  font-size: var(--font-size-sm, 24rpx);
+  color: var(--color-secondary, #6B6B6B);
+  text-align: center;
+}
+
+.gate-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, var(--color-accent, #E8B84B) 0%, #F0A500 100%);
+  color: #fff;
+  border-radius: var(--radius-md, 12rpx);
+  font-size: var(--font-size-lg, 32rpx);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--spacing-md, 16rpx);
+}
+
+.gate-close {
+  width: 100%;
+  height: 64rpx;
+  background: transparent;
+  color: var(--color-secondary, #6B6B6B);
+  border-radius: var(--radius-md, 12rpx);
+  font-size: var(--font-size-sm, 24rpx);
+}

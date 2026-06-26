@@ -1,0 +1,11 @@
+<!-- 工具卡片通用组件 -->
+<view class="tool-card {{toolId}}" bindtap="onTap">
+  <view class="card-icon-wrap">
+    <image class="card-icon" src="{{icon}}" mode="aspectFit" />
+  </view>
+  <view class="card-content">
+    <text class="card-name">{{name}}</text>
+    <text class="card-desc">{{description}}</text>
+  </view>
+  <view class="card-arrow">›</view>
+</view>

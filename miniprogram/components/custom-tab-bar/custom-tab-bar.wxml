@@ -1,0 +1,30 @@
+<!-- 自定义 Tab Bar 组件
+     中间凸起按钮为快速决策入口 -->
+<view class="custom-tab-bar">
+  <!-- Tab 背景 -->
+  <view class="tab-bar-bg" />
+
+  <!-- Tab 项 -->
+  <view
+    class="tab-item {{item.active ? 'active' : ''}}"
+    wx:for="{{tabs}}"
+    wx:key="path"
+    bindtap="onTabTap"
+    data-path="{{item.path}}"
+    data-index="{{index}}"
+  >
+    <view class="tab-icon-wrap">
+      <text class="tab-icon">{{item.icon}}</text>
+      <!-- 未读小红点 -->
+      <view class="unread-dot" wx:if="{{item.name === 'review' && unreadCount > 0}}" />
+    </view>
+    <text class="tab-label">{{item.label}}</text>
+  </view>
+
+  <!-- 中间凸起快速决策按钮 -->
+  <view class="center-btn-wrap">
+    <view class="center-btn" bindtap="onQuickTap">
+      <text class="center-btn-icon">⚡</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "openapi": ["subscribeMessage.send"]
+  },
+  "triggers": [
+    {
+      "name": "daily_inbox_push",
+      "type": "timer",
+      "config": "0 0 9 * * * *"
+    }
+  ]
+}

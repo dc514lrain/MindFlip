@@ -1,0 +1,15 @@
+<!-- 决策大师 (MindFlip) — 结果飞入 Inbox 动画组件
+     负责将决策结果以飞行轨迹动画送入复盘列表 -->
+
+<view class="flyer-container">
+  <view
+    class="flyer-ball {{visible ? 'flying' : ''}}"
+    style="--from-x: {{fromX}}px; --from-y: {{fromY}}px; --to-x: {{toX}}px; --to-y: {{toY}}px;"
+    wx:if="{{visible}}"
+  >
+    <view class="flyer-inner">
+      <text class="flyer-icon">{{icon}}</text>
+      <text class="flyer-label">{{label}}</text>
+    </view>
+  </view>
+</view>

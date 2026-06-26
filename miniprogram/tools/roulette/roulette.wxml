@@ -1,0 +1,57 @@
+<!-- 大转盘工具使用态页面 -->
+<view class="roulette-page">
+
+  <!-- 转盘选项输入区 -->
+  <view class="options-section" wx:if="{{!showResult && !loading}}">
+    <view class="section-title">添加选项</view>
+    <view class="option-list">
+      <view class="option-item" wx:for="{{options}}" wx:key="id">
+        <input
+          class="option-input"
+          placeholder="选项 {{index + 1}}"
+          maxlength="20"
+          value="{{item.label}}"
+          data-index="{{index}}"
+          bindinput="onOptionInput"
+        />
+        <view class="option-delete" bindtap="onDeleteOption" data-index="{{index}}" wx:if="{{options.length > 2}}">
+          <text>✕</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="add-option-row" wx:if="{{options.length < 12}}">
+      <button class="add-option-btn" bindtap="onAddOption">+ 添加选项</button>
+    </view>
+
+    <view class="spin-section">
+      <button
+        class="spin-btn {{options.length < 2 ? 'disabled' : ''}}"
+        bindtap="onSpin"
+        disabled="{{options.length < 2}}"
+      >
+        {{options.length < 2 ? '至少需要2个选项' : '开始转！'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 结果展示 -->
+  <view class="result-section" wx:if="{{showResult}}">
+    <view class="result-badge">转盘结果</view>
+    <text class="result-value">{{semanticResult}}</text>
+    <text class="result-time">{{resultTime}}</text>
+
+    <view class="memo-section">
+      <input class="memo-input" placeholder="给这个决定加个备忘（选填）" maxlength="100" value="{{memo}}" bindinput="onMemoInput" />
+    </view>
+
+    <view class="result-actions">
+      <button class="btn-primary" bindtap="onSave">存入待决清单</button>
+      <button class="btn-secondary" bindtap="onRetry">重新转</button>
+    </view>
+  </view>
+
+  <view class="loading-overlay" wx:if="{{loading}}">
+    <text class="loading-text">转动中...</text>
+  </view>
+</view>

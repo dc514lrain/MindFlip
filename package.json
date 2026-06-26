@@ -1,15 +1,23 @@
 {
-  "name": "miniprogram-ts-quickstart",
+  "name": "mindflip",
   "version": "1.0.0",
-  "description": "",
+  "description": "决策大师 (MindFlip) - 微信小程序决策辅助工具",
+  "main": "index.js",
   "scripts": {
+    "dev": "echo '使用微信开发者工具打开项目根目录进行开发'",
+    "build": "echo '微信开发者工具自动构建，无需手动操作'",
+    "deploy:cloud": "echo '在微信开发者工具中右键 cloudfunctions → 上传并部署'"
   },
-  "keywords": [],
+  "keywords": ["wechat", "miniprogram", "decision-making"],
   "author": "",
-  "license": "",
+  "license": "MIT",
   "dependencies": {
+    "mobx-miniprogram": "^6.0.0",
+    "mobx-miniprogram-bindings": "^3.0.0"
   },
   "devDependencies": {
-    "miniprogram-api-typings": "^2.8.3-1"
+    "miniprogram-api-typings": "^4.0.0",
+    "@cloudbase/cli": "^1.0.0",
+    "typescript": "^5.0.0"
   }
 }

@@ -1,0 +1,38 @@
+/* 杂志风标题排版组件样式 */
+
+.editorial-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 8rpx);
+}
+
+.editorial-header.small .header-label { font-size: var(--font-size-xs, 22rpx); }
+.editorial-header.small .header-title { font-size: var(--font-size-xl, 36rpx); }
+.editorial-header.small .header-subtitle { font-size: var(--font-size-sm, 24rpx); }
+
+.editorial-header.medium .header-label { font-size: var(--font-size-sm, 24rpx); }
+.editorial-header.medium .header-title { font-size: var(--font-size-xxl, 44rpx); }
+.editorial-header.medium .header-subtitle { font-size: var(--font-size-base, 28rpx); }
+
+.editorial-header.large .header-label { font-size: var(--font-size-base, 28rpx); }
+.editorial-header.large .header-title { font-size: var(--font-size-display, 56rpx); }
+.editorial-header.large .header-subtitle { font-size: var(--font-size-lg, 32rpx); }
+
+.header-label {
+  text-transform: uppercase;
+  letter-spacing: 2rpx;
+  color: var(--color-accent, #E8B84B);
+  font-weight: 700;
+}
+
+.header-title {
+  font-weight: 800;
+  color: var(--color-primary, #1A1A1A);
+  letter-spacing: -0.5rpx;
+  line-height: 1.2;
+}
+
+.header-subtitle {
+  color: var(--color-secondary, #6B6B6B);
+  line-height: 1.5;
+}

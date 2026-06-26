@@ -1,54 +1,74 @@
-// index.ts
-// 获取应用实例
-const app = getApp<IAppOption>()
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+// 首页 · 决策 Tab
 
-Component({
+import { storeBindingsBehavior } from 'mobx-miniprogram-bindings';
+import { appStore } from '../../core/stores/AppStore';
+import { inboxStore } from '../../core/stores/InboxStore';
+import { statsStore } from '../../core/stores/StatsStore';
+import { toolRegistry } from '../../core/registry/ToolRegistry';
+import { Router } from '../../core/utils/router';
+
+interface IndexPageData {
+  instantTools: ReturnType<typeof toolRegistry.getByGroup>('instant');
+  decisionTools: ReturnType<typeof toolRegistry.getByGroup>('decision');
+  unreadCount: number;
+  totalDecisions: number;
+  followRate: number;
+  primaryTag: string;
+  primaryIcon: string;
+  markedCount: number;
+}
+
+Page({
+  behaviors: [storeBindingsBehavior],
+
+  storeBindings: [
+    {
+      store: inboxStore,
+      fields: ['unreadCount'],
+    },
+    {
+      store: statsStore,
+      fields: ['primaryTag', 'primaryIcon', 'overview'],
+      actions: ['refreshOverview'],
+    },
+  ],
+
   data: {
-    motto: 'Hello World',
-    userInfo: {
-      avatarUrl: defaultAvatarUrl,
-      nickName: '',
-    },
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
+    instantTools: [],
+    decisionTools: [],
+    unreadCount: 0,
+    totalDecisions: 0,
+    followRate: 0,
+    primaryTag: '',
+    primaryIcon: '',
+    markedCount: 0,
+  } as IndexPageData,
+
+  onLoad(): void {
+    const home = toolRegistry.getForHome();
+    this.setData({
+      instantTools: home.instant,
+      decisionTools: home.decision,
+    });
+    inboxStore.refreshUnreadCount();
+    statsStore.loadPersonality('weekly');
   },
-  methods: {
-    // 事件处理函数
-    bindViewTap() {
-      wx.navigateTo({
-        url: '../logs/logs',
-      })
-    },
-    onChooseAvatar(e: any) {
-      const { avatarUrl } = e.detail
-      const { nickName } = this.data.userInfo
-      this.setData({
-        "userInfo.avatarUrl": avatarUrl,
-        hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-      })
-    },
-    onInputChange(e: any) {
-      const nickName = e.detail.value
-      const { avatarUrl } = this.data.userInfo
-      this.setData({
-        "userInfo.nickName": nickName,
-        hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-      })
-    },
-    getUserProfile() {
-      // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-      wx.getUserProfile({
-        desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-        success: (res) => {
-          console.log(res)
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    },
+
+  onShow(): void {
+    inboxStore.refreshUnreadCount();
+    statsStore.refreshOverview();
   },
-})
+
+  openTool(e: WechatMiniprogram.TouchEvent): void {
+    const toolId = e.currentTarget.dataset.tool as string;
+    Router.openTool(toolId);
+  },
+
+  goToReview(): void {
+    Router.switchToReview();
+  },
+
+  goToStats(): void {
+    Router.openToolStats('coin');
+  },
+});

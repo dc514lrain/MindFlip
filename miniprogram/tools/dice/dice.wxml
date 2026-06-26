@@ -1,0 +1,50 @@
+<!-- 骰子工具使用态页面 -->
+<view class="dice-page">
+  <canvas type="2d" id="dice-canvas" class="dice-canvas" bindtap="onRoll" />
+
+  <!-- 骰子数量选择 -->
+  <view class="dice-count-section" wx:if="{{!showResult && !loading}}">
+    <view class="count-label">选择骰子数量</view>
+    <view class="count-selector">
+      <view
+        class="count-btn {{diceCount === count ? 'active' : ''}}"
+        wx:for="{{[1,2,3,4,5,6]}}"
+        wx:for-item="count"
+        wx:key="count"
+        bindtap="onSelectCount"
+        data-count="{{count}}"
+      >
+        <text class="count-text">{{count}}</text>
+      </view>
+    </view>
+
+    <view class="tap-hint">
+      <text class="tap-hint-icon">👆</text>
+      <text class="tap-hint-text">点击骰子开始</text>
+    </view>
+  </view>
+
+  <!-- 结果展示 -->
+  <view class="result-section" wx:if="{{showResult}}">
+    <view class="result-dice-row">
+      <text class="result-face {{item == targetFace ? 'highlight' : ''}}" wx:for="{{resultFaces}}" wx:key="*this">
+        {{item}}
+      </text>
+    </view>
+    <text class="result-total">总计：{{totalResult}} 点</text>
+    <text class="result-time">{{resultTime}}</text>
+
+    <view class="memo-section">
+      <input class="memo-input" placeholder="给这个决定加个备忘（选填）" maxlength="100" value="{{memo}}" bindinput="onMemoInput" />
+    </view>
+
+    <view class="result-actions">
+      <button class="btn-primary" bindtap="onSave">存入待决清单</button>
+      <button class="btn-secondary" bindtap="onRetry">重新掷</button>
+    </view>
+  </view>
+
+  <view class="loading-overlay" wx:if="{{loading}}">
+    <text class="loading-text">掷骰中...</text>
+  </view>
+</view>

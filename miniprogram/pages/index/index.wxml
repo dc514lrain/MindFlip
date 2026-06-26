@@ -1,27 +1,92 @@
-<!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
+<!-- 首页 · 决策 Tab -->
+<view class="index-page">
+
+  <!-- 顶部品牌区 -->
+  <view class="brand-header">
+    <text class="brand-title">决策大师</text>
+    <text class="brand-subtitle">让随机性成为你的决策盟友</text>
+  </view>
+
+  <!-- 人格标签概览（首页快速预览） -->
+  <view class="personality-preview" wx:if="{{primaryTag}}">
+    <text class="tag-icon">{{primaryIcon}}</text>
+    <text class="tag-name">{{primaryTag}}</text>
+    <text class="tag-hint">本周已标记 {{markedCount}} 次</text>
+  </view>
+
+  <!-- 极速组工具 -->
+  <view class="tool-group">
+    <view class="group-header">
+      <text class="group-title">极速决策</text>
+      <text class="group-desc">一秒出结果</text>
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+    <view class="tool-grid instant-grid">
+      <view
+        class="tool-card {{tool.id}}"
+        wx:for="{{instantTools}}"
+        wx:key="id"
+        bindtap="openTool"
+        data-tool="{{tool.id}}"
+      >
+        <view class="card-icon-wrap">
+          <image class="card-icon" src="{{tool.icon}}" mode="aspectFit" />
+        </view>
+        <text class="card-name">{{tool.name}}</text>
+        <text class="card-desc">{{tool.description}}</text>
+      </view>
     </view>
   </view>
-</scroll-view>
+
+  <!-- 决策组工具 -->
+  <view class="tool-group">
+    <view class="group-header">
+      <text class="group-title">理性分析</text>
+      <text class="group-desc">深度思考后决策</text>
+    </view>
+    <view class="tool-grid decision-grid">
+      <view
+        class="tool-card {{tool.id}}"
+        wx:for="{{decisionTools}}"
+        wx:key="id"
+        bindtap="openTool"
+        data-tool="{{tool.id}}"
+      >
+        <view class="card-icon-wrap">
+          <image class="card-icon" src="{{tool.icon}}" mode="aspectFit" />
+        </view>
+        <text class="card-name">{{tool.name}}</text>
+        <text class="card-desc">{{tool.description}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 待决清单快捷入口 -->
+  <view class="inbox-entry" bindtap="goToReview">
+    <view class="inbox-left">
+      <text class="inbox-icon">📋</text>
+      <view class="inbox-info">
+        <text class="inbox-title">待决清单</text>
+        <text class="inbox-subtitle">{{unreadCount > 0 ? '有 ' + unreadCount + ' 条待复盘' : '暂无待决项'}}</text>
+      </view>
+    </view>
+    <view class="inbox-badge" wx:if="{{unreadCount > 0}}">
+      <text class="badge-text">{{unreadCount}}</text>
+    </view>
+  </view>
+
+  <!-- 统计预览 -->
+  <view class="stats-preview" bindtap="goToStats">
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-value">{{totalDecisions}}</text>
+        <text class="stat-label">总决策</text>
+      </view>
+      <view class="stat-divider" />
+      <view class="stat-item">
+        <text class="stat-value">{{followRate}}%</text>
+        <text class="stat-label">遵循率</text>
+      </view>
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,21 @@
+<!-- 订阅消息授权半屏弹窗组件 -->
+<view class="subscribe-modal {{visible ? 'visible' : ''}}" wx:if="{{visible}}">
+  <view class="modal-mask" bindtap="onClose" />
+  <view class="modal-sheet">
+    <view class="modal-handle" />
+    <view class="modal-content">
+      <text class="modal-icon">🔔</text>
+      <text class="modal-title">{{title || '开启复盘提醒'}}</text>
+      <text class="modal-desc">{{description || '每天 9:00 收到待决清单推送提醒'}}</text>
+      <view class="benefit-list">
+        <view class="benefit-item" wx:for="{{benefits}}" wx:key="*this">
+          <text>{{item}}</text>
+        </view>
+      </view>
+      <view class="modal-actions">
+        <button class="btn-authorize" bindtap="onAuthorize">授权开启</button>
+        <button class="btn-later" bindtap="onLater">稍后再说</button>
+      </view>
+    </view>
+  </view>
+</view>

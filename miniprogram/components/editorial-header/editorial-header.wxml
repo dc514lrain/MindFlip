@@ -1,0 +1,6 @@
+<!-- 杂志风标题排版组件 -->
+<view class="editorial-header {{size}}">
+  <text class="header-label">{{label}}</text>
+  <text class="header-title">{{title}}</text>
+  <text class="header-subtitle" wx:if="{{subtitle}}">{{subtitle}}</text>
+</view>

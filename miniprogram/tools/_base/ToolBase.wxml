@@ -1,0 +1,57 @@
+<!-- 决策大师 (MindFlip) — 工具页通用壳 (ToolBase.wxml)
+     所有工具使用态页面共享此布局结构 -->
+
+<view class="tool-page {{toolId}}">
+  <!-- 顶部导航栏 -->
+  <view class="tool-header">
+    <view class="tool-icon-wrapper">
+      <image class="tool-icon" src="{{toolIcon}}" mode="aspectFit" />
+    </view>
+    <view class="tool-title-area">
+      <text class="tool-name">{{toolName}}</text>
+      <text class="tool-description">{{toolDescription}}</text>
+    </view>
+  </view>
+
+  <!-- 工具主内容区（slot） -->
+  <view class="tool-body">
+    <slot name="tool-content" />
+  </view>
+
+  <!-- 工具底部操作区（slot） -->
+  <view class="tool-footer">
+    <slot name="tool-footer" />
+  </view>
+
+  <!-- 结果展示浮层 -->
+  <view class="result-overlay {{showResult ? 'visible' : ''}}" wx:if="{{showResult}}">
+    <view class="result-card">
+      <text class="result-label">决策结果</text>
+      <text class="result-value">{{semanticResult}}</text>
+      <text class="result-raw">{{rawResult}}</text>
+
+      <!-- 轻备注输入 -->
+      <view class="memo-section" wx:if="{{showMemoInput}}">
+        <input
+          class="memo-input"
+          placeholder="给这个决定加个备忘（选填）"
+          maxlength="100"
+          value="{{memo}}"
+          bindinput="onMemoInput"
+        />
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="result-actions">
+        <button class="btn-primary" bindtap="onSaveDecision">存入待决清单</button>
+        <button class="btn-secondary" bindtap="onDiscardResult">重新决策</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载态 -->
+  <view class="loading-overlay" wx:if="{{loading}}">
+    <view class="loading-spinner" />
+    <text class="loading-text">处理中...</text>
+  </view>
+</view>

@@ -1,0 +1,71 @@
+<!-- 硬币工具使用态页面 -->
+<view class="coin-page">
+  <!-- Canvas 2D 动画画布 -->
+  <canvas
+    type="2d"
+    id="coin-canvas"
+    class="coin-canvas"
+    bindtap="onFlip"
+  />
+
+  <!-- 决策选项（点击硬币前显示） -->
+  <view class="coin-options" wx:if="{{!showResult && !loading}}">
+    <view class="option-row">
+      <view class="option-input-group">
+        <text class="option-label">正面选项</text>
+        <input
+          class="option-input"
+          placeholder="例如：火锅"
+          maxlength="20"
+          value="{{headsLabel}}"
+          bindinput="onHeadsInput"
+        />
+      </view>
+      <view class="vs-divider">VS</view>
+      <view class="option-input-group">
+        <text class="option-label">反面选项</text>
+        <input
+          class="option-input"
+          placeholder="例如：烧烤"
+          maxlength="20"
+          value="{{tailsLabel}}"
+          bindinput="onTailsInput"
+        />
+      </view>
+    </view>
+
+    <!-- 点击提示 -->
+    <view class="tap-hint">
+      <text class="tap-hint-icon">👆</text>
+      <text class="tap-hint-text">点击硬币开始决策</text>
+    </view>
+  </view>
+
+  <!-- 结果展示 -->
+  <view class="result-section" wx:if="{{showResult}}">
+    <text class="result-raw-text">{{rawResultText}}</text>
+    <text class="result-semantic">{{semanticResult}}</text>
+    <text class="result-time">{{resultTime}}</text>
+
+    <!-- 轻备注 -->
+    <view class="memo-section">
+      <input
+        class="memo-input"
+        placeholder="给这个决定加个备忘（选填）"
+        maxlength="100"
+        value="{{memo}}"
+        bindinput="onMemoInput"
+      />
+    </view>
+
+    <view class="result-actions">
+      <button class="btn-primary" bindtap="onSave">存入待决清单</button>
+      <button class="btn-secondary" bindtap="onRetry">重新抛</button>
+    </view>
+  </view>
+
+  <!-- 加载态 -->
+  <view class="loading-overlay" wx:if="{{loading}}">
+    <text class="loading-text">决策中...</text>
+  </view>
+</view>

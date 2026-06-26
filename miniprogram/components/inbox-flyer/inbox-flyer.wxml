@@ -1,0 +1,7 @@
+<!-- Inbox 飞入动效组件 -->
+<view class="inbox-flyer-mask {{visible ? 'visible' : ''}}" bindtap="onMaskTap" wx:if="{{visible}}">
+  <view class="flyer-toast">
+    <text class="flyer-icon">📋</text>
+    <text class="flyer-text">{{message}}</text>
+  </view>
+</view>

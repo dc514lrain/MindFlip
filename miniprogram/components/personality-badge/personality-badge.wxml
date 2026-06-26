@@ -1,0 +1,13 @@
+<!-- 人格标签展示组件 -->
+<view class="personality-badge {{size}}" bindtap="onTap">
+  <text class="badge-icon">{{primaryIcon}}</text>
+  <view class="badge-info">
+    <text class="badge-name">{{primaryTag}}</text>
+    <view class="badge-secondary" wx:if="{{secondaryTags.length > 0}}">
+      <text class="secondary-tag" wx:for="{{secondaryTags}}" wx:key="*this">{{item.icon}} {{item.name}}</text>
+    </view>
+  </view>
+  <view class="badge-loading" wx:if="{{loading}}">
+    <view class="loading-dot" />
+  </view>
+</view>

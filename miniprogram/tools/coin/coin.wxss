@@ -1,0 +1,190 @@
+/* 硬币工具样式 */
+
+.coin-page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #FAFAF8 0%, #F5E6C0 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxl) var(--spacing-lg);
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Canvas 画布 */
+.coin-canvas {
+  width: 600rpx;
+  height: 600rpx;
+  max-width: 80vw;
+  max-height: 80vw;
+  margin-bottom: var(--spacing-xl);
+  border-radius: 50%;
+  background: transparent;
+}
+
+/* 选项区 */
+.coin-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xl);
+  width: 100%;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  width: 100%;
+  justify-content: center;
+}
+
+.option-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+  max-width: 240rpx;
+}
+
+.option-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+.option-input {
+  height: 72rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2rpx solid var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: 0 var(--spacing-md);
+  font-size: var(--font-size-base);
+  color: var(--color-primary);
+}
+
+.vs-divider {
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* 点击提示 */
+.tap-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-lg);
+}
+
+.tap-hint-icon {
+  font-size: 48rpx;
+  animation: bounce 1.5s ease-in-out infinite;
+}
+
+.tap-hint-text {
+  font-size: var(--font-size-base);
+  color: var(--color-secondary);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10rpx); }
+}
+
+/* 结果区 */
+.result-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  padding: var(--spacing-xl);
+}
+
+.result-raw-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+  letter-spacing: 2rpx;
+  text-transform: uppercase;
+}
+
+.result-semantic {
+  font-size: var(--font-size-display);
+  font-weight: 800;
+  color: var(--color-primary);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.result-time {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary);
+}
+
+.memo-section {
+  width: 100%;
+  max-width: 600rpx;
+  margin-top: var(--spacing-md);
+}
+
+.memo-input {
+  width: 100%;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1rpx solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0 var(--spacing-md);
+  font-size: var(--font-size-base);
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+  max-width: 600rpx;
+  margin-top: var(--spacing-lg);
+}
+
+.btn-primary {
+  width: 100%;
+  height: 88rpx;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary {
+  width: 100%;
+  height: 72rpx;
+  background: transparent;
+  color: var(--color-secondary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+}
+
+/* 加载态 */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(250, 250, 248, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-text {
+  font-size: var(--font-size-lg);
+  color: var(--color-secondary);
+}

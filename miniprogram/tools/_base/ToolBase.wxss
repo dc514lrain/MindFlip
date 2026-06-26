@@ -1,0 +1,196 @@
+/* 决策大师 (MindFlip) — 工具页通用壳样式 */
+
+.tool-page {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-lg);
+  box-sizing: border-box;
+}
+
+/* 顶部导航栏 */
+.tool-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) 0;
+  border-bottom: 1rpx solid var(--color-border);
+  margin-bottom: var(--spacing-lg);
+}
+
+.tool-icon-wrapper {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tool-icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.tool-title-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xxs);
+}
+
+.tool-name {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.tool-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+}
+
+/* 工具主体 */
+.tool-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl) 0;
+}
+
+/* 工具底部操作区 */
+.tool-footer {
+  padding: var(--spacing-lg) 0;
+}
+
+/* 结果浮层 */
+.result-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-normal) ease;
+}
+
+.result-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.result-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xxl) var(--spacing-xl);
+  width: 600rpx;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  box-shadow: var(--shadow-float);
+}
+
+.result-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2rpx;
+}
+
+.result-value {
+  font-size: var(--font-size-display);
+  font-weight: 800;
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.result-raw {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary);
+}
+
+.memo-section {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+}
+
+.memo-input {
+  width: 100%;
+  height: 80rpx;
+  background: var(--color-bg);
+  border: 1rpx solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0 var(--spacing-md);
+  font-size: var(--font-size-base);
+  box-sizing: border-box;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+  margin-top: var(--spacing-md);
+}
+
+.btn-primary {
+  width: 100%;
+  height: 88rpx;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary {
+  width: 100%;
+  height: 72rpx;
+  background: transparent;
+  color: var(--color-secondary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+}
+
+/* 加载态 */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  z-index: var(--z-modal);
+}
+
+.loading-spinner {
+  width: 64rpx;
+  height: 64rpx;
+  border: 4rpx solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: var(--font-size-base);
+  color: var(--color-secondary);
+}

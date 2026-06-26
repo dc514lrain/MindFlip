@@ -1,0 +1,68 @@
+<!-- 我的 Tab -->
+<view class="me-page">
+  <!-- 用户信息区 -->
+  <view class="user-section">
+    <view class="user-avatar-wrap">
+      <image class="user-avatar" src="{{user.avatar_url || '/assets/icons/default-avatar.png'}}" mode="aspectFill" />
+      <view class="vip-badge" wx:if="{{isVip}}">VIP</view>
+    </view>
+    <view class="user-info">
+      <text class="user-nickname">{{user.nickname || '微信用户'}}</text>
+      <text class="user-level">{{isVip ? 'VIP 会员' : '免费用户'}}</text>
+    </view>
+  </view>
+
+  <!-- VIP 升级引导（Free 用户） -->
+  <view class="vip-promo" wx:if="{{!isVip}}">
+    <view class="promo-content">
+      <text class="promo-title">解锁更多决策工具</text>
+      <text class="promo-desc">VIP 可创建自定义决策工具，生成专属人格海报</text>
+      <button class="promo-btn">立即升级 VIP</button>
+    </view>
+  </view>
+
+  <!-- 统计数据 -->
+  <view class="stats-grid">
+    <view class="stat-item">
+      <text class="stat-value">{{stats.total_decisions || 0}}</text>
+      <text class="stat-label">总决策</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{stats.total_follow_rate || 0}}%</text>
+      <text class="stat-label">遵循率</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{stats.weekly_decisions || 0}}</text>
+      <text class="stat-label">本周</text>
+    </view>
+  </view>
+
+  <!-- 人格标签 -->
+  <view class="personality-section" wx:if="{{personality}}">
+    <view class="section-title">人格档案</view>
+    <view class="tag-card">
+      <text class="tag-icon">{{personality.tags?.primary?.icon}}</text>
+      <text class="tag-name">{{personality.tags?.primary?.name}}</text>
+      <text class="tag-secondary" wx:for="{{personality.tags?.secondary}}" wx:key="*this">{{item.icon}} {{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 菜单列表 -->
+  <view class="menu-section">
+    <view class="menu-item" bindtap="goToAllStats">
+      <text class="menu-icon">📊</text>
+      <text class="menu-text">全部统计数据</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goToPrivacy">
+      <text class="menu-icon">🔒</text>
+      <text class="menu-text">隐私设置</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goToAbout">
+      <text class="menu-icon">ℹ️</text>
+      <text class="menu-text">关于决策大师</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+</view>

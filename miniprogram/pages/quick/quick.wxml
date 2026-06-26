@@ -1,0 +1,23 @@
+<!-- 快速选择 Tab（中间凸起按钮） -->
+<view class="quick-page">
+  <view class="quick-hint">
+    <text class="hint-icon">⚡</text>
+    <text class="hint-text">选择一个工具快速决策</text>
+  </view>
+
+  <!-- 极速工具快速入口 -->
+  <view class="quick-tools">
+    <view class="quick-card coin" bindtap="openTool" data-tool="coin">
+      <text class="quick-icon">🪙</text>
+      <text class="quick-name">抛硬币</text>
+    </view>
+    <view class="quick-card dice" bindtap="openTool" data-tool="dice">
+      <text class="quick-icon">🎲</text>
+      <text class="quick-name">掷骰子</text>
+    </view>
+    <view class="quick-card roulette" bindtap="openTool" data-tool="roulette">
+      <text class="quick-icon">🎯</text>
+      <text class="quick-name">大转盘</text>
+    </view>
+  </view>
+</view>

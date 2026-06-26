@@ -1,14 +1,55 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/review/review",
+    "pages/quick/quick",
+    "pages/me/me",
+    "pages/tool-run/tool-run",
+    "pages/tool-stats/tool-stats",
+    "pages/subscribe-guide/subscribe-guide"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "Weixin",
-    "navigationBarBackgroundColor": "#ffffff"
+    "navigationBarTitleText": "决策大师",
+    "navigationStyle": "custom",
+    "backgroundColor": "#FAFAF8",
+    "backgroundTextStyle": "light"
   },
-  "style": "v2",
+  "tabBar": {
+    "custom": true,
+    "color": "#999999",
+    "selectedColor": "#1A1A1A",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/review/review",
+        "text": "复盘"
+      },
+      {
+        "pagePath": "pages/quick/quick",
+        "text": "快选"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "我的"
+      }
+    ]
+  },
+  "requiredBackgroundModes": [],
+  "permission": {},
+  "networkTimeout": {
+    "request": 10000,
+    "connectSocket": 10000,
+    "uploadFile": 10000,
+    "downloadFile": 10000
+  },
+  "lazyCodeLoading": "requiredComponents",
   "componentFramework": "glass-easel",
-  "lazyCodeLoading": "requiredComponents"
+  "renderer": "skyline",
+  "usingSwan": false,
+  "themeLocation": ""
 }

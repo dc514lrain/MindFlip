@@ -1,0 +1,37 @@
+<!-- 订阅消息授权引导页 -->
+<view class="subscribe-guide-page">
+  <view class="guide-header">
+    <text class="guide-icon">🔔</text>
+    <text class="guide-title">开启复盘提醒</text>
+    <text class="guide-desc">{{sceneDescription}}</text>
+  </view>
+
+  <view class="benefit-list">
+    <view class="benefit-item">
+      <text class="benefit-icon">📅</text>
+      <view class="benefit-text">
+        <text class="benefit-title">每天 9:00 提醒</text>
+        <text class="benefit-desc">不再错过任何一个待决决定</text>
+      </view>
+    </view>
+    <view class="benefit-item">
+      <text class="benefit-icon">🏆</text>
+      <view class="benefit-text">
+        <text class="benefit-title">人格标签成长</text>
+        <text class="benefit-desc">标记次数越多，人格画像越精准</text>
+      </view>
+    </view>
+    <view class="benefit-item">
+      <text class="benefit-icon">🔒</text>
+      <view class="benefit-text">
+        <text class="benefit-title">随时可关闭</text>
+        <text class="benefit-desc">微信内随时管理授权，无骚扰</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="guide-actions">
+    <button class="btn-authorize" bindtap="onAuthorize">授权开启提醒</button>
+    <button class="btn-skip" bindtap="onSkip">暂不开启</button>
+  </view>
+</view>

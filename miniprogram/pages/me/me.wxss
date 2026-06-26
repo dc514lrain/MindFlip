@@ -1,0 +1,184 @@
+/* 我的 Tab 样式 */
+
+.me-page {
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding: var(--spacing-lg);
+  padding-bottom: 160rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* 用户信息区 */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding-top: var(--spacing-xxl);
+}
+
+.user-avatar-wrap {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid var(--color-accent);
+}
+
+.vip-badge {
+  position: absolute;
+  bottom: -8rpx;
+  right: -8rpx;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 18rpx;
+  font-weight: 800;
+  padding: 2rpx 8rpx;
+  border-radius: var(--radius-round);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.user-nickname {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.user-level {
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+}
+
+/* VIP 推广区 */
+.vip-promo {
+  background: linear-gradient(135deg, #1A1A1A 0%, #3A3A3A 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  color: #fff;
+}
+
+.promo-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.promo-desc {
+  font-size: var(--font-size-sm);
+  color: rgba(255,255,255,0.7);
+  display: block;
+  margin-bottom: var(--spacing-md);
+}
+
+.promo-btn {
+  background: var(--color-accent);
+  color: #fff;
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  border-radius: var(--radius-round);
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 统计网格 */
+.stats-grid {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.stat-item {
+  flex: 1;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  box-shadow: var(--shadow-card);
+}
+
+.stat-value {
+  font-size: var(--font-size-xxl);
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary);
+}
+
+/* 人格标签 */
+.personality-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.tag-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  box-shadow: var(--shadow-card);
+}
+
+.tag-icon { font-size: 80rpx; }
+
+.tag-name {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.tag-secondary {
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+}
+
+/* 菜单 */
+.menu-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rpx;
+  background: var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.menu-item {
+  background: var(--color-bg-card);
+  padding: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.menu-icon { font-size: 40rpx; }
+.menu-text { flex: 1; font-size: var(--font-size-base); color: var(--color-primary); }
+.menu-arrow { font-size: var(--font-size-lg); color: var(--color-border); }

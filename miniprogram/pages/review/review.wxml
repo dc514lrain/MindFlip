@@ -1,0 +1,77 @@
+<!-- 复盘 Tab (Inbox + Insights) -->
+<view class="review-page">
+
+  <!-- 人格标签区域 -->
+  <view class="personality-section">
+    <view class="section-header">
+      <text class="section-title">本周人格画像</text>
+      <text class="section-tag">{{primaryTag}}</text>
+    </view>
+    <view class="tag-display" wx:if="{{primaryTag}}">
+      <text class="primary-tag-icon">{{primaryIcon}}</text>
+      <view class="primary-tag-info">
+        <text class="primary-tag-name">{{primaryTag}}</text>
+        <text class="secondary-tags">{{secondaryTagText}}</text>
+      </view>
+    </view>
+    <view class="tag-empty" wx:else>
+      <text class="empty-hint">标记 10 次决策后解锁人格标签</text>
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{preheatProgress}}%" />
+      </view>
+      <text class="progress-text">{{preheatCount}} / 10</text>
+    </view>
+  </view>
+
+  <!-- 统计数据概览 -->
+  <view class="stats-overview">
+    <view class="stat-card">
+      <text class="stat-value">{{totalDecisions}}</text>
+      <text class="stat-label">总决策</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{followRate}}%</text>
+      <text class="stat-label">遵循率</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{pendingCount}}</text>
+      <text class="stat-label">待复盘</text>
+    </view>
+  </view>
+
+  <!-- 待决清单 -->
+  <view class="inbox-section">
+    <view class="section-header">
+      <text class="section-title">待决清单</text>
+      <text class="section-count" wx:if="{{pendingCount > 0}}">{{pendingCount}} 条</text>
+    </view>
+
+    <view class="inbox-list" wx:if="{{!loading}}">
+      <view class="inbox-item" wx:for="{{pendingList}}" wx:key="_id">
+        <view class="item-top">
+          <view class="item-tool-badge {{item.tool_type}}">{{item.tool_name}}</view>
+          <text class="item-time">{{item.relativeTime}}</text>
+        </view>
+        <text class="item-result">{{item.semantic_result}}</text>
+        <text class="item-memo" wx:if="{{item.user_memo}}">{{item.user_memo}}</text>
+        <view class="item-countdown" wx:if="{{item.isExpiringSoon}}">
+          <text>⏰ {{item.countdown}}</text>
+        </view>
+        <view class="item-actions">
+          <button class="action-btn followed" bindtap="onMarkFollowed" data-id="{{item._id}}">遵循了</button>
+          <button class="action-btn not-followed" bindtap="onMarkNotFollowed" data-id="{{item._id}}">没遵循</button>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{pendingList.length === 0 && !loading}}">
+        <text class="empty-icon">🎉</text>
+        <text class="empty-text">所有决定都已复盘！</text>
+      </view>
+    </view>
+
+    <view class="loading-state" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+
+</view>

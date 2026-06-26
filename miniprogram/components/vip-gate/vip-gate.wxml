@@ -1,0 +1,18 @@
+<!-- VIP 功能门控组件 -->
+<!-- 仅 VIP 用户可见内容，Free 用户显示升级引导 -->
+
+<block wx:if="{{isVip}}">
+  <slot name="content" />
+</block>
+
+<block wx:else>
+  <view class="vip-gate-overlay" wx:if="{{showOverlay}}">
+    <view class="gate-card">
+      <text class="gate-icon">👑</text>
+      <text class="gate-title">{{title || 'VIP 专属功能'}}</text>
+      <text class="gate-desc">{{description || '升级 VIP 解锁此功能'}}</text>
+      <button class="gate-btn" bindtap="onUpgrade">立即升级</button>
+      <button class="gate-close" bindtap="onDismiss" wx:if="{{dismissible}}">关闭</button>
+    </view>
+  </view>
+</block>

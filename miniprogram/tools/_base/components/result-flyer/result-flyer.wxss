@@ -1,0 +1,62 @@
+/* 结果飞入 Inbox 动画组件样式 */
+
+.flyer-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 500;
+}
+
+.flyer-ball {
+  position: absolute;
+  left: var(--from-x, 50%);
+  top: var(--from-y, 50%);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.flyer-ball.flying {
+  animation: flyToInbox var(--fly-duration, 600ms) var(--fly-easing, ease-in-out) forwards;
+}
+
+@keyframes flyToInbox {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(
+      calc(-50% + var(--to-x, 0px) * 0.6),
+      calc(-50% + var(--to-y, 0px) * 0.6)
+    ) scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(-50% + var(--to-x, 0px)),
+      calc(-50% + var(--to-y, 0px))
+    ) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.flyer-inner {
+  background: var(--color-accent, #E8B84B);
+  border-radius: 9999rpx;
+  padding: 16rpx 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  box-shadow: var(--shadow-lg, 0 8rpx 32rpx rgba(0,0,0,0.12));
+  white-space: nowrap;
+}
+
+.flyer-icon {
+  font-size: 32rpx;
+}
+
+.flyer-label {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #fff;
+}

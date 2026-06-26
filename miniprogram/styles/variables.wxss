@@ -1,0 +1,73 @@
+/* 决策大师 (MindFlip) — CSS 变量文件 */
+/* 所有样式变量集中管理，供全局使用 */
+
+/* ═══ 颜色系统 ════════════════════════════════════════════════════════════════════ */
+page {
+  /* 主色调 */
+  --color-primary: #1A1A1A;
+  --color-secondary: #6B6B6B;
+  --color-accent: #E8B84B;
+  --color-accent-light: #F5E6C0;
+
+  /* 背景 */
+  --color-bg: #FAFAF8;
+  --color-bg-card: #FFFFFF;
+
+  /* 边框 */
+  --color-border: #E8E8E4;
+
+  /* 状态色 */
+  --color-pending: #F0A500;
+  --color-followed: #3CB371;
+  --color-not-followed: #E57373;
+  --color-expired: #BDBDBD;
+
+  /* 语义色 */
+  --color-success: #4CAF50;
+  --color-warning: #FF9800;
+  --color-error: #F44336;
+  --color-info: #2196F3;
+
+  /* ═══ 字号系统 ════════════════════════════════════════════════════════════════════ */
+  --font-size-xs: 22rpx;
+  --font-size-sm: 24rpx;
+  --font-size-base: 28rpx;
+  --font-size-lg: 32rpx;
+  --font-size-xl: 36rpx;
+  --font-size-xxl: 44rpx;
+  --font-size-display: 56rpx;
+
+  /* ═══ 间距系统 ════════════════════════════════════════════════════════════════════ */
+  --spacing-xxs: 4rpx;
+  --spacing-xs: 8rpx;
+  --spacing-sm: 12rpx;
+  --spacing-md: 16rpx;
+  --spacing-lg: 24rpx;
+  --spacing-xl: 32rpx;
+  --spacing-xxl: 48rpx;
+  --spacing-xxxl: 64rpx;
+
+  /* ═══ 圆角 ════════════════════════════════════════════════════════════════════ */
+  --radius-sm: 8rpx;
+  --radius-md: 12rpx;
+  --radius-lg: 16rpx;
+  --radius-xl: 24rpx;
+  --radius-round: 9999rpx;
+
+  /* ═══ 阴影 ════════════════════════════════════════════════════════════════════ */
+  --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8rpx 32rpx rgba(0, 0, 0, 0.12);
+  --shadow-card: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  --shadow-float: 0 12rpx 48rpx rgba(0, 0, 0, 0.16);
+
+  /* ═══ 动画时长 ════════════════════════════════════════════════════════════════════ */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  /* ═══ z-index ════════════════════════════════════════════════════════════════════ */
+  --z-tab-bar: 100;
+  --z-modal: 200;
+  --z-toast: 300;
+}

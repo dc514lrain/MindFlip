@@ -1,0 +1,38 @@
+/* 人格标签展示组件样式 */
+
+.personality-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 16rpx);
+  background: var(--color-accent-light, #F5E6C0);
+  border-radius: var(--radius-lg, 16rpx);
+  padding: var(--spacing-md, 16rpx) var(--spacing-lg, 24rpx);
+}
+
+.personality-badge.small { padding: var(--spacing-sm, 12rpx) var(--spacing-md, 16rpx); gap: var(--spacing-sm, 12rpx); }
+.personality-badge.large { padding: var(--spacing-xl, 32rpx) var(--spacing-xxl, 48rpx); gap: var(--spacing-lg, 24rpx); }
+
+.badge-icon { font-size: 48rpx; }
+.badge-info { display: flex; flex-direction: column; gap: var(--spacing-xxs, 4rpx); flex: 1; }
+
+.badge-name {
+  font-size: var(--font-size-base, 28rpx);
+  font-weight: 700;
+  color: var(--color-primary, #1A1A1A);
+}
+
+.badge-secondary { display: flex; gap: var(--spacing-xs, 8rpx); flex-wrap: wrap; }
+.secondary-tag { font-size: var(--font-size-xs, 22rpx); color: var(--color-secondary, #6B6B6B); }
+
+.badge-loading { display: flex; align-items: center; justify-content: center; }
+.loading-dot {
+  width: 24rpx; height: 24rpx;
+  border-radius: 50%;
+  background: var(--color-accent, #E8B84B);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}

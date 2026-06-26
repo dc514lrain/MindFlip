@@ -1,0 +1,66 @@
+<!-- 单工具统计页（动态路由） -->
+<view class="tool-stats-page">
+
+  <!-- 工具标题 -->
+  <view class="stats-header">
+    <text class="tool-name">{{toolName}}</text>
+    <text class="tool-desc">{{toolDescription}}</text>
+  </view>
+
+  <!-- 核心统计 -->
+  <view class="core-stats">
+    <view class="stat-card">
+      <text class="stat-value">{{totalUses}}</text>
+      <text class="stat-label">使用次数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{followRate}}%</text>
+      <text class="stat-label">遵循率</text>
+    </view>
+  </view>
+
+  <!-- 时间热力图 -->
+  <view class="heatmap-section" wx:if="{{showHeatmap}}">
+    <view class="section-title">使用时间分布</view>
+    <view class="heatmap-grid">
+      <view class="heatmap-row" wx:for="{{heatmapData}}" wx:key="*this">
+        <view
+          class="heatmap-cell {{item > 0 ? 'active' : ''}}"
+          wx:for="{{item}}"
+          wx:for-item="count"
+          wx:key="*this"
+          style="opacity: {{count > 0 ? Math.min(count / maxHeat, 1) * 0.8 + 0.2 : 0.1}}"
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 结果分布 -->
+  <view class="distribution-section" wx:if="{{showDistribution}}">
+    <view class="section-title">结果分布</view>
+    <view class="distribution-list">
+      <view class="dist-item" wx:for="{{distribution}}" wx:key="key">
+        <text class="dist-label">{{item.key}}</text>
+        <view class="dist-bar-wrap">
+          <view class="dist-bar" style="width: {{item.percent}}%" />
+        </view>
+        <text class="dist-value">{{item.count}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section">
+    <view class="section-title">历史记录</view>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{history}}" wx:key="_id">
+        <text class="history-result">{{item.semantic_result}}</text>
+        <view class="history-meta">
+          <text class="history-status {{item.follow_status}}">{{statusLabelMap[item.follow_status]}}</text>
+          <text class="history-time">{{item.relativeTime}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

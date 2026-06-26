@@ -1,0 +1,13 @@
+<!-- 工具使用态通用页（动态路由） -->
+<view class="tool-run-page">
+  <!-- 根据 toolId 动态渲染工具内容 -->
+  <!-- Phase 1: 硬编码路由映射，未来可改为动态组件加载 -->
+
+  <view class="tool-placeholder" wx:if="{{!toolId}}">
+    <text class="placeholder-icon">🔧</text>
+    <text class="placeholder-text">工具加载中...</text>
+  </view>
+
+  <!-- 工具内容由各工具自己的页面组件负责渲染 -->
+  <!-- 此处为占位，实际由 toolRegistry.get(id).runRoute 跳转 -->
+</view>

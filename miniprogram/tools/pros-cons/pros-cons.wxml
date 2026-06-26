@@ -1,0 +1,130 @@
+<!-- 优缺点对比工具页面 -->
+<view class="pros-cons-page">
+
+  <!-- 决策主题输入 -->
+  <view class="topic-section" wx:if="{{!showResult && !loading}}">
+    <input
+      class="topic-input"
+      placeholder="要做什么决定？例如：要不要换工作"
+      maxlength="50"
+      value="{{topic}}"
+      bindinput="onTopicInput"
+    />
+  </view>
+
+  <!-- 优缺点输入区 -->
+  <view class="analysis-section" wx:if="{{!showResult && !loading}}">
+
+    <!-- 优点列 -->
+    <view class="column pros-column">
+      <view class="column-header">
+        <text class="column-icon">👍</text>
+        <text class="column-title">优点</text>
+      </view>
+      <view class="item-list">
+        <view class="analysis-item" wx:for="{{pros}}" wx:key="id">
+          <view class="item-row">
+            <input
+              class="item-input"
+              placeholder="输入优点"
+              maxlength="100"
+              value="{{item.text}}"
+              data-list="pros"
+              data-index="{{index}}"
+              bindinput="onItemInput"
+            />
+            <view class="weight-selector">
+              <view
+                class="weight-btn {{item.weight >= w ? 'active' : ''}}"
+                wx:for="{{[1,2,3,4,5]}}"
+                wx:for-item="w"
+                wx:key="w"
+                data-list="pros"
+                data-index="{{index}}"
+                data-weight="{{w}}"
+                bindtap="onWeightChange"
+              >{{w}}</view>
+            </view>
+            <view class="item-delete" bindtap="onDeleteItem" data-list="pros" data-index="{{index}}" wx:if="{{pros.length > 1}}">✕</view>
+          </view>
+        </view>
+      </view>
+      <button class="add-item-btn" bindtap="onAddPro">+ 添加优点</button>
+    </view>
+
+    <!-- 缺点列 -->
+    <view class="column cons-column">
+      <view class="column-header">
+        <text class="column-icon">👎</text>
+        <text class="column-title">缺点</text>
+      </view>
+      <view class="item-list">
+        <view class="analysis-item" wx:for="{{cons}}" wx:key="id">
+          <view class="item-row">
+            <input
+              class="item-input"
+              placeholder="输入缺点"
+              maxlength="100"
+              value="{{item.text}}"
+              data-list="cons"
+              data-index="{{index}}"
+              bindinput="onItemInput"
+            />
+            <view class="weight-selector">
+              <view
+                class="weight-btn {{item.weight >= w ? 'active' : ''}}"
+                wx:for="{{[1,2,3,4,5]}}"
+                wx:for-item="w"
+                wx:key="w"
+                data-list="cons"
+                data-index="{{index}}"
+                data-weight="{{w}}"
+                bindtap="onWeightChange"
+              >{{w}}</view>
+            </view>
+            <view class="item-delete" bindtap="onDeleteItem" data-list="cons" data-index="{{index}}" wx:if="{{cons.length > 1}}">✕</view>
+          </view>
+        </view>
+      </view>
+      <button class="add-item-btn" bindtap="onAddCon">+ 添加缺点</button>
+    </view>
+  </view>
+
+  <!-- 分析按钮 -->
+  <view class="action-section" wx:if="{{!showResult && !loading}}">
+    <button class="analyze-btn" bindtap="onAnalyze">开始分析</button>
+  </view>
+
+  <!-- 结果展示 -->
+  <view class="result-section" wx:if="{{showResult}}">
+    <view class="result-badge {{conclusion}}">
+      <text>{{conclusion === 'pros' ? '✅ 建议执行' : conclusion === 'cons' ? '⚠️ 建议谨慎' : '⚖️ 势均力敌'}}</text>
+    </view>
+    <text class="result-semantic">{{semanticResult}}</text>
+    <view class="score-row">
+      <view class="score-item">
+        <text class="score-value">{{prosScore}}</text>
+        <text class="score-label">优点得分</text>
+      </view>
+      <text class="score-divider">:</text>
+      <view class="score-item">
+        <text class="score-value">{{consScore}}</text>
+        <text class="score-label">缺点得分</text>
+      </view>
+    </view>
+    <text class="result-time">{{resultTime}}</text>
+
+    <view class="memo-section">
+      <input class="memo-input" placeholder="给这个决定加个备忘（选填）" maxlength="100" value="{{memo}}" bindinput="onMemoInput" />
+    </view>
+
+    <view class="result-actions">
+      <button class="btn-primary" bindtap="onSave">存入待决清单</button>
+      <button class="btn-secondary" bindtap="onReset">重新分析</button>
+    </view>
+  </view>
+
+  <view class="loading-overlay" wx:if="{{loading}}">
+    <text class="loading-text">分析中...</text>
+  </view>
+</view>
