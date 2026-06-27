@@ -4,6 +4,15 @@ import { toolRegistry } from '../../core/registry/ToolRegistry';
 import { dataService } from '../../core/services/DataService';
 import { relativeTime } from '../../core/utils/date';
 
+interface DecisionLog {
+  id: string;
+  tool_type: string;
+  raw_result: string;
+  semantic_result: string;
+  follow_status: string;
+  created_at: number;
+}
+
 interface ToolStatsPageData {
   toolId: string;
   toolName: string;

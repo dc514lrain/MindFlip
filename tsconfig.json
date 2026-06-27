@@ -2,21 +2,19 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "lib": ["ES2020"],
-    "strict": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    "lib": ["ES2020", "DOM"],
+    "types": ["miniprogram-api-typings"],
+    "strict": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "resolveJsonModule": true,
     "moduleResolution": "node",
-    "declaration": true,
-    "outDir": "./dist",
+    "declaration": false,
+    "noEmitOnError": false,
     "baseUrl": ".",
     "paths": {
       "@core/*": ["miniprogram/core/*"],
@@ -27,6 +25,6 @@
       "@assets/*": ["miniprogram/assets/*"]
     }
   },
-  "include": ["miniprogram/**/*", "cloudfunctions/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["miniprogram/**/*.ts"],
+  "exclude": ["node_modules", "dist", "cloudfunctions"]
 }

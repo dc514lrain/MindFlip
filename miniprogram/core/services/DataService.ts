@@ -17,7 +17,7 @@ interface DataServiceError extends Error {
 
 // ═══ 内部工具函数 ════════════════════════════════════════════════════════════
 async function callFunction<T>(name: string, data: Record<string, unknown>): Promise<T> {
-  const res = await wx.cloud.callFunction({ name, data }) as CloudResponse<T>;
+  const res = await wx.cloud.callFunction({ name, data }) as unknown as CloudResponse<T>;
   if (res.code === 0) return res.data as T;
   throw new Error(`[DataService] ${name} failed: ${res.message} (code: ${res.code})`);
 }

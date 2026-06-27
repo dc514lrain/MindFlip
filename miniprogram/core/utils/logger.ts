@@ -3,6 +3,8 @@
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
+declare const __DEV__: boolean | undefined;
+
 const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
 
 function formatMessage(level: LogLevel, msg: string, data?: unknown): string {

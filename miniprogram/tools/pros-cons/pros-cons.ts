@@ -1,8 +1,37 @@
 // 优缺点对比工具 TypeScript 页面逻辑
 
-import { ProsConsEngine, ProItem, ConItem } from './pros-cons';
 import { dataService } from '../../core/services/DataService';
 import { formatTime } from '../../core/utils/date';
+
+// ── 类型定义 ──────────────────────────────────────────────────────────────────
+interface ProItem {
+  id: string;
+  text: string;
+  weight: number;
+}
+
+interface ConItem {
+  id: string;
+  text: string;
+  weight: number;
+}
+
+// ── ProsConsEngine 核心算法 ────────────────────────────────────────────────────
+const ProsConsEngine = {
+  analyze(pros: ProItem[], cons: ConItem[]) {
+    const prosScore = pros.reduce((sum, p) => sum + p.weight, 0);
+    const consScore = cons.reduce((sum, c) => sum + c.weight, 0);
+    const diff = prosScore - consScore;
+    const conclusion: 'pros' | 'cons' | 'neutral' = diff > 0 ? 'pros' : diff < 0 ? 'cons' : 'neutral';
+    return {
+      conclusion,
+      pros_score: prosScore,
+      cons_score: consScore,
+      semantic_result: conclusion === 'pros' ? '优点胜出' : conclusion === 'cons' ? '缺点胜出' : '持平',
+      raw_result: `优点 ${prosScore} : 缺点 ${consScore}`,
+    };
+  },
+};
 
 interface ProsConsPageData {
   topic: string;

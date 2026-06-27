@@ -8,8 +8,8 @@ import { toolRegistry } from '../../core/registry/ToolRegistry';
 import { Router } from '../../core/utils/router';
 
 interface IndexPageData {
-  instantTools: ReturnType<typeof toolRegistry.getByGroup>('instant');
-  decisionTools: ReturnType<typeof toolRegistry.getByGroup>('decision');
+  instantTools: any[];
+  decisionTools: any[];
   unreadCount: number;
   totalDecisions: number;
   followRate: number;

@@ -1,9 +1,27 @@
 // 骰子工具 TypeScript 页面逻辑
 
-import { DiceEngine } from './dice';
 import { createDiceAnimation } from './dice.canvas';
 import { dataService } from '../../core/services/DataService';
 import { formatTime } from '../../core/utils/date';
+
+// ── DiceEngine 核心算法 ────────────────────────────────────────────────────────
+interface DiceResult {
+  face_count: number;
+  roll: number;
+}
+
+const DiceEngine = {
+  rollMultiple(count: number) {
+    const results: DiceResult[] = [];
+    let total = 0;
+    for (let i = 0; i < count; i++) {
+      const face_count = Math.floor(Math.random() * 6) + 1;
+      results.push({ face_count, roll: face_count });
+      total += face_count;
+    }
+    return { results, total, semantic_result: `掷出了 ${total} 点` };
+  },
+};
 
 interface DicePageData {
   showResult: boolean;

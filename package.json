@@ -8,7 +8,11 @@
     "build": "echo '微信开发者工具自动构建，无需手动操作'",
     "deploy:cloud": "echo '在微信开发者工具中右键 cloudfunctions → 上传并部署'"
   },
-  "keywords": ["wechat", "miniprogram", "decision-making"],
+  "keywords": [
+    "wechat",
+    "miniprogram",
+    "decision-making"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
@@ -16,8 +20,13 @@
     "mobx-miniprogram-bindings": "^3.0.0"
   },
   "devDependencies": {
-    "miniprogram-api-typings": "^4.0.0",
+    "@babel/cli": "^8.0.1",
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
+    "@babel/preset-typescript": "^8.0.1",
     "@cloudbase/cli": "^1.0.0",
+    "esbuild": "^0.28.1",
+    "miniprogram-api-typings": "^4.0.0",
     "typescript": "^5.0.0"
   }
 }

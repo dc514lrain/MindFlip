@@ -48,8 +48,13 @@
     "downloadFile": 10000
   },
   "lazyCodeLoading": "requiredComponents",
-  "componentFramework": "glass-easel",
   "renderer": "skyline",
-  "usingSwan": false,
-  "themeLocation": ""
+  "rendererOptions": {
+    "skyline": {
+      "defaultDisplayBlock": true,
+      "tagNameStyleIsolation": "legacy",
+      "keyframeStyleIsolation": "legacy"
+    }
+  },
+  "usingSwan": false
 }

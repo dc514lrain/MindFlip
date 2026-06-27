@@ -1,10 +1,30 @@
 // 大转盘工具 TypeScript 页面逻辑
 
-import { RouletteEngine, RouletteOption } from './roulette';
 import { dataService } from '../../core/services/DataService';
 import { formatTime } from '../../core/utils/date';
 import { triggerHaptic } from '../../core/utils/haptic';
 import { Easing } from '../../core/utils/easing';
+
+// ── 类型定义 ──────────────────────────────────────────────────────────────────
+interface RouletteOption {
+  id: string;
+  label: string;
+}
+
+// ── RouletteEngine 核心算法 ────────────────────────────────────────────────────
+const RouletteEngine = {
+  MIN_OPTIONS: 2,
+  MAX_OPTIONS: 20,
+
+  spin(options: RouletteOption[]) {
+    const index = Math.floor(Math.random() * options.length);
+    const selected = options[index];
+    return {
+      raw_result: selected.label,
+      semantic_result: `转到了「${selected.label}」`,
+    };
+  },
+};
 
 interface RoulettePageData {
   showResult: boolean;

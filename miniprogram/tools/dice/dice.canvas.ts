@@ -108,7 +108,7 @@ export function createDiceAnimation(): DiceAnimationInstance {
             triggerHaptic('heavy'); // 最终撞击触觉
 
             const progress = (elapsed - ROLLING_DURATION) / REVEAL_DURATION;
-            const scale = Easing.easeOutBack(Math.min(progress * 3, 1));
+            const scale = Easing.easeBackOut(Math.min(progress * 3, 1));
             const ctxRef2 = ctx as CanvasRenderingContext2D;
             const cw = ctxRef2.canvas.width;
             const ch = ctxRef2.canvas.height;

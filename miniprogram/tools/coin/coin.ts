@@ -1,10 +1,20 @@
 // 硬币工具 TypeScript 页面逻辑
-// 架构: coin.ts (核心算法) + coin.canvas.ts (Canvas 2D 动画) + coin.wxml (视图)
+// 架构: coin.ts (核心算法 + 页面逻辑) + coin.canvas.ts (Canvas 2D 动画) + coin.wxml (视图)
 
-import { CoinEngine } from './coin';
 import { createCoinAnimation } from './coin.canvas';
 import { dataService } from '../../core/services/DataService';
 import { formatTime } from '../../core/utils/date';
+
+// ── CoinEngine 核心算法 ────────────────────────────────────────────────────────
+const CoinEngine = {
+  RESULT_LABELS: { heads: '正面', tails: '反面' } as Record<string, string>,
+
+  flip(headsLabel: string, tailsLabel: string) {
+    const raw_result = Math.random() < 0.5 ? 'heads' : 'tails';
+    const semantic_result = raw_result === 'heads' ? headsLabel : tailsLabel;
+    return { raw_result, semantic_result };
+  },
+};
 
 interface CoinPageData {
   showResult: boolean;

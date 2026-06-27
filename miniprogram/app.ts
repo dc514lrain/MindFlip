@@ -12,7 +12,7 @@ import './tools/dice/manifest';
 import './tools/roulette/manifest';
 import './tools/pros-cons/manifest';
 
-App<IAppOption>({
+App({
   stores: {
     appStore,
     inboxStore,
@@ -20,7 +20,11 @@ App<IAppOption>({
   },
 
   onLaunch(): void {
-    // Skyline 渲染引擎无需额外初始化
+    // 云能力初始化（必须在使用 wx.cloud.* 之前调用）
+    wx.cloud.init({
+      env: 'cloud1',
+      traceUser: true,
+    });
     this.initLogin();
   },
 
@@ -29,7 +33,7 @@ App<IAppOption>({
     inboxStore.refreshUnreadCount();
   },
 
-  private async initLogin(): Promise<void> {
+  async initLogin(): Promise<void> {
     // 优先使用缓存的登录态
     const cachedToken = wx.getStorageSync('token');
     if (cachedToken) {

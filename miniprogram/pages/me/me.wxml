@@ -40,11 +40,13 @@
   <!-- 人格标签 -->
   <view class="personality-section" wx:if="{{personality}}">
     <view class="section-title">人格档案</view>
-    <view class="tag-card">
-      <text class="tag-icon">{{personality.tags?.primary?.icon}}</text>
-      <text class="tag-name">{{personality.tags?.primary?.name}}</text>
-      <text class="tag-secondary" wx:for="{{personality.tags?.secondary}}" wx:key="*this">{{item.icon}} {{item.name}}</text>
+    <view class="tag-card" wx:if="{{personality.tags && personality.tags.primary}}">
+      <text class="tag-icon">{{personality.tags.primary.icon}}</text>
+      <text class="tag-name">{{personality.tags.primary.name}}</text>
     </view>
+    <block wx:if="{{personality.tags && personality.tags.secondary}}">
+      <text class="tag-secondary" wx:for="{{personality.tags.secondary}}" wx:key="*this">{{item.icon}} {{item.name}}</text>
+    </block>
   </view>
 
   <!-- 菜单列表 -->
