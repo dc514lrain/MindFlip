@@ -11,7 +11,7 @@ const coinManifest: ToolManifest = {
   icon: '/assets/icons/coin.svg',
   group: 'instant',
   inboxPolicy: 'auto',
-  runRoute: '/pages/tool-run/tool-run?id=coin',
+  runRoute: '/tools/coin/coin',
   statsRoute: '/pages/tool-stats/tool-stats?id=coin',
   statsDimensions: [
     'frequency',

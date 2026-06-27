@@ -21,26 +21,49 @@ interface DecisionLog {
 const BREAK_REASONS = ['intuition', 'external_change', 'just_testing', 'dislike_result', 'still_thinking'] as const;
 type BreakReason = typeof BREAK_REASONS[number];
 
+interface InboxQueryResult {
+  items: DecisionLog[];
+  next_token: string | null;
+  total: number;
+}
+
 class InboxStore {
   pendingList: DecisionLog[] = [];
   unreadCount = 0;
   loading = false;
   bannerDismissed = false;
   pageToken: string | null = null;
+  subscribeAuthorized = false;
+  rejectedCount = 0;
 
   constructor() {
     makeAutoObservable(this);
+    this.loadSubscribeAuth();
+  }
+
+  async loadSubscribeAuth(): Promise<void> {
+    try {
+      const res = await dataService.getSubscribeAuthStatus();
+      runInAction(() => {
+        this.subscribeAuthorized = res.is_authorized;
+        this.rejectedCount = res.rejected_count;
+        this.bannerDismissed = dataService.getLocalCache<boolean>('banner_dismissed') ?? false;
+      });
+    } catch {
+      // 静默失败
+    }
   }
 
   async loadList(): Promise<void> {
     runInAction(() => { this.loading = true; });
     try {
-      // TODO: 调用 dataService.queryInbox() 获取真实数据
-      // const res = await dataService.queryInbox(20, this.pageToken ?? undefined);
-      // runInAction(() => {
-      //   this.pendingList = res.items;
-      //   this.pageToken = res.next_token;
-      // });
+      const res = await dataService.queryInbox(20, this.pageToken ?? undefined) as InboxQueryResult;
+      runInAction(() => {
+        this.pendingList = res?.items ?? [];
+        this.pageToken = res?.next_token ?? null;
+      });
+    } catch {
+      // 静默失败，保留旧数据
     } finally {
       runInAction(() => { this.loading = false; });
     }
@@ -51,41 +74,61 @@ class InboxStore {
       const count = await dataService.getUnreadCount();
       runInAction(() => { this.unreadCount = count; });
     } catch {
-      // 静默失败，不影响主流程
+      // 静默失败
     }
   }
 
   async markFollowed(id: string): Promise<void> {
+    // 乐观更新
+    const prevList = this.pendingList;
     runInAction(() => {
       this.pendingList = this.pendingList.filter(item => item._id !== id);
+      this.unreadCount = Math.max(0, this.unreadCount - 1);
     });
     try {
       await dataService.markDecision(id, 'followed');
     } catch {
-      // TODO: 回滚逻辑
+      // 回滚
+      runInAction(() => { this.pendingList = prevList; });
     }
   }
 
   async markNotFollowed(id: string, reason: BreakReason): Promise<void> {
     if (!BREAK_REASONS.includes(reason)) return;
+    // 乐观更新
+    const prevList = this.pendingList;
     runInAction(() => {
       this.pendingList = this.pendingList.filter(item => item._id !== id);
+      this.unreadCount = Math.max(0, this.unreadCount - 1);
     });
     try {
       await dataService.markDecision(id, 'not_followed', reason);
     } catch {
-      // TODO: 回滚逻辑
+      // 回滚
+      runInAction(() => { this.pendingList = prevList; });
     }
   }
 
   dismissBanner(): void {
     runInAction(() => { this.bannerDismissed = true; });
+    dataService.setLocalCache('banner_dismissed', true);
+  }
+
+  setSubscribeAuth(authorized: boolean, rejectedCount: number): void {
+    runInAction(() => {
+      this.subscribeAuthorized = authorized;
+      this.rejectedCount = rejectedCount;
+    });
   }
 
   get hasExpiredItems(): boolean {
     return this.pendingList.some(item => {
       return (Date.now() - item.created_at) > 48 * 3600 * 1000;
     });
+  }
+
+  get showBanner(): boolean {
+    return !this.bannerDismissed && !this.subscribeAuthorized && this.rejectedCount < 3;
   }
 }
 

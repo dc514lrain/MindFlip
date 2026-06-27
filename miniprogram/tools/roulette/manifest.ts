@@ -10,7 +10,7 @@ const rouletteManifest: ToolManifest = {
   icon: '/assets/icons/roulette.svg',
   group: 'decision',
   inboxPolicy: 'auto',
-  runRoute: '/pages/tool-run/tool-run?id=roulette',
+  runRoute: '/tools/roulette/roulette',
   statsRoute: '/pages/tool-stats/tool-stats?id=roulette',
   statsDimensions: [
     'frequency',

@@ -19,8 +19,8 @@ Component({
   data: {
     tabs: [
       { path: '/pages/index/index', name: 'index', label: '首页', icon: '🏠', active: true },
-      { path: '/pages/review/review', name: 'review', label: '复盘', icon: '📋', active: false },
       { path: '/pages/quick/quick', name: 'quick', label: '快选', icon: '⚡', active: false },
+      { path: '/pages/review/review', name: 'review', label: '复盘', icon: '📋', active: false },
       { path: '/pages/me/me', name: 'me', label: '我的', icon: '👤', active: false },
     ] as TabItem[],
     unreadCount: 0,
@@ -29,7 +29,12 @@ Component({
   lifetimes: {
     attached(): void {
       this.updateActiveTab();
-      this.setData({ unreadCount: inboxStore.unreadCount });
+    },
+  },
+
+  pageLifetimes: {
+    show(): void {
+      this.updateActiveTab();
     },
   },
 
@@ -43,13 +48,17 @@ Component({
         ...tab,
         active: tab.path === currentPath,
       }));
-      this.setData({ tabs });
+      this.setData({ tabs, unreadCount: inboxStore.unreadCount });
     },
 
     onTabTap(e: WechatMiniprogram.TouchEvent): void {
       const path = e.currentTarget.dataset.path as string;
       const name = e.currentTarget.dataset.name as string;
-      if (name === 'quick') return; // 中间按钮单独处理
+      if (name === 'quick') {
+        wx.switchTab({ url: '/pages/quick/quick' });
+        return;
+      }
+      if (this.data.tabs.find(t => t.path === path && t.active)) return;
       wx.switchTab({ url: path });
     },
 

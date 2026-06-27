@@ -47,4 +47,18 @@
   <view class="loading-overlay" wx:if="{{loading}}">
     <text class="loading-text">掷骰中...</text>
   </view>
+
+  <!-- 订阅消息授权弹窗 -->
+  <subscribe-modal
+    visible="{{showSubscribeModal}}"
+    tool-name="骰子"
+    bind:result="onSubscribeResult"
+    bind:close="onSubscribeResult"
+  />
+
+  <!-- 首次使用引导浮层 -->
+  <onboarding-toast
+    visible="{{showOnboarding}}"
+    bind:close="onOnboardingClose"
+  />
 </view>

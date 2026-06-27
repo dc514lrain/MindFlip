@@ -32,7 +32,6 @@ exports.main = async (event, context) => {
   const { action, period = 'weekly' } = event;
 
   if (action === 'recalculate') {
-    // 强制重新计算
     return computeAndSave(OPENID, db, period);
   }
 
@@ -44,7 +43,10 @@ exports.main = async (event, context) => {
     .get();
 
   const markedCountRes = await db.collection('decision_logs')
-    .where({ _openid: OPENID, marked_at: db.command.exists(true) })
+    .where({ _openid: OPENID })
+    .field({ marked_at: true })
+    .and()
+    .where({ marked_at: db.command.exists(true) })
     .count();
 
   const markedCount = markedCountRes.total;
@@ -57,7 +59,7 @@ exports.main = async (event, context) => {
       data: {
         tags: {
           primary: { name: t.primary_tag, icon: t.primary_tag_icon },
-          secondary: t.secondary_tags.map((name, i) => ({ name, icon: t.secondary_tag_icons[i] })),
+          secondary: (t.secondary_tags || []).map((name, i) => ({ name, icon: (t.secondary_tag_icons || [])[i] || '' })),
         },
         preheat_progress: { current: markedCount, required, next_milestone_msg: '' },
         stats_basis: t.calculation_input,
@@ -89,31 +91,36 @@ async function computeAndSave(openid, db, period) {
   const now = Date.now();
   const weekAgo = period === 'weekly' ? now - 7 * 24 * 3600 * 1000 : 0;
 
-  const records = await db.collection('decision_logs')
+  const query = db.collection('decision_logs')
     .where({
       _openid: openid,
       marked_at: db.command.exists(true),
-      ...(period === 'weekly' ? { created_at: db.command.gte(weekAgo) } : {}),
-    })
-    .get();
+    });
 
-  const total = records.data.length;
+  // 如果是 weekly，额外过滤 created_at
+  const records = await query.get();
+
+  const filteredRecords = period === 'weekly'
+    ? records.data.filter(r => r.created_at >= weekAgo)
+    : records.data;
+
+  const total = filteredRecords.length;
   if (total === 0) {
     return { code: 0, message: '无数据', data: { tags: null }, server_time: now };
   }
 
-  const followed = records.data.filter(r => r.follow_status === 'followed').length;
-  const notFollowed = records.data.filter(r => r.follow_status === 'not_followed').length;
+  const followed = filteredRecords.filter(r => r.follow_status === 'followed').length;
+  const notFollowed = filteredRecords.filter(r => r.follow_status === 'not_followed').length;
   const followRate = Math.round((followed / (followed + notFollowed || 1)) * 100);
 
   // top_tool
-  const toolCount: Record<string, number> = {};
-  records.data.forEach(r => { toolCount[r.tool_type] = (toolCount[r.tool_type] || 0) + 1; });
+  const toolCount = {};
+  filteredRecords.forEach(r => { toolCount[r.tool_type] = (toolCount[r.tool_type] || 0) + 1; });
   const topTool = Object.entries(toolCount).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
 
   // dominant_break_reason
-  const reasonCount: Record<string, number> = {};
-  records.data.filter(r => r.break_reason).forEach(r => {
+  const reasonCount = {};
+  filteredRecords.filter(r => r.break_reason).forEach(r => {
     reasonCount[r.break_reason] = (reasonCount[r.break_reason] || 0) + 1;
   });
   const dominantReason = Object.entries(reasonCount).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
@@ -130,7 +137,14 @@ async function computeAndSave(openid, db, period) {
     primary_tag_icon: primary.icon,
     secondary_tags: secondary.map(s => s.name),
     secondary_tag_icons: secondary.map(s => s.icon),
-    calculation_input: { total_decisions: total, followed_count: followed, not_followed_count: notFollowed, follow_rate: followRate, break_reason_distribution: reasonCount, tool_diversity: Object.keys(toolCount).length },
+    calculation_input: {
+      total_decisions: total,
+      followed_count: followed,
+      not_followed_count: notFollowed,
+      follow_rate: followRate,
+      break_reason_distribution: reasonCount,
+      tool_diversity: Object.keys(toolCount).length,
+    },
     calculated_at: now,
     algorithm_version: '1.0',
   };

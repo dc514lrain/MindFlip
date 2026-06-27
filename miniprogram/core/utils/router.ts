@@ -9,7 +9,10 @@ interface RouterOptions {
 export const Router = {
   /** 打开工具使用页 */
   openTool(toolId: string): void {
-    wx.navigateTo({ url: `/pages/tool-run/tool-run?id=${toolId}` });
+    const manifest = toolRegistry.get(toolId);
+    if (manifest) {
+      wx.navigateTo({ url: manifest.runRoute });
+    }
   },
 
   /** 打开工具统计页 */

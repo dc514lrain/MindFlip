@@ -1,5 +1,8 @@
 {
   "renderer": "skyline",
   "componentFramework": "glass-easel",
-  "usingComponents": {}
+  "usingComponents": {
+    "subscribe-modal": "/components/subscribe-modal/subscribe-modal",
+    "onboarding-toast": "/components/onboarding-toast/onboarding-toast"
+  }
 }

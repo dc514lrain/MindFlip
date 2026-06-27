@@ -1,12 +1,18 @@
-// 复盘 Tab
+// 复盘 Tab (Inbox + Insights)
 
 import { storeBindingsBehavior } from 'mobx-miniprogram-bindings';
-import { inboxStore } from '../../core/stores/InboxStore';
+import { inboxStore, DecisionLog, BreakReason } from '../../core/stores/InboxStore';
 import { statsStore } from '../../core/stores/StatsStore';
 import { relativeTime, expireCountdown, isExpiringSoon } from '../../core/utils/date';
 
+interface DisplayDecision extends DecisionLog {
+  relativeTimeStr: string;
+  isExpiringSoonFlag: boolean;
+  countdown: string;
+}
+
 interface ReviewPageData {
-  pendingList: (Decision & { relativeTime: string; isExpiringSoon: boolean; countdown: string })[];
+  pendingList: DisplayDecision[];
   pendingCount: number;
   loading: boolean;
   totalDecisions: number;
@@ -16,15 +22,9 @@ interface ReviewPageData {
   secondaryTagText: string;
   preheatProgress: number;
   preheatCount: number;
-}
-
-interface Decision {
-  _id: string;
-  tool_type: string;
-  tool_name: string;
-  semantic_result: string;
-  user_memo: string;
-  created_at: number;
+  showBanner: boolean;
+  actionSheetItem: { id: string; text: string } | null;
+  showActionSheet: boolean;
 }
 
 Page({
@@ -33,12 +33,11 @@ Page({
   storeBindings: [
     {
       store: inboxStore,
-      fields: ['pendingList', 'loading'],
-      actions: ['loadList', 'markFollowed', 'markNotFollowed'],
+      fields: ['pendingList', 'loading', 'showBanner'],
     },
     {
       store: statsStore,
-      fields: ['primaryTag', 'primaryIcon', 'secondaryTags', 'overview', 'preheatProgress'],
+      fields: ['primaryTagName as primaryTag', 'primaryIcon', 'secondaryTagText', 'overview', 'preheatProgress', 'preheatCount', 'totalDecisions', 'followRate'],
       actions: ['refreshOverview', 'loadPersonality'],
     },
   ],
@@ -54,7 +53,20 @@ Page({
     secondaryTagText: '',
     preheatProgress: 0,
     preheatCount: 0,
+    showBanner: false,
+    actionSheetItem: null,
+    showActionSheet: false,
   } as ReviewPageData,
+
+  observers: {
+    'pendingList': function (newList: DecisionLog[]) {
+      const display = this.computeDisplayList(newList || []);
+      this.setData({
+        pendingList: display,
+        pendingCount: display.length,
+      });
+    },
+  },
 
   onLoad(): void {
     inboxStore.loadList();
@@ -66,6 +78,16 @@ Page({
     inboxStore.loadList();
   },
 
+  onPullDownRefresh(): void {
+    Promise.all([
+      inboxStore.loadList(),
+      statsStore.refreshOverview(),
+      statsStore.loadPersonality('weekly'),
+    ]).finally(() => {
+      wx.stopPullDownRefresh();
+    });
+  },
+
   onMarkFollowed(e: WechatMiniprogram.TouchEvent): void {
     const id = e.currentTarget.dataset.id as string;
     inboxStore.markFollowed(id);
@@ -73,7 +95,51 @@ Page({
 
   onMarkNotFollowed(e: WechatMiniprogram.TouchEvent): void {
     const id = e.currentTarget.dataset.id as string;
-    // TODO: 展开 action-sheet 选择 break_reason
-    inboxStore.markFollowed(id); // 临时
+    const item = inboxStore.pendingList.find(d => d._id === id);
+    this.setData({
+      actionSheetItem: item ? { id, text: item.semantic_result } : null,
+      showActionSheet: true,
+    });
+  },
+
+  onActionFollow(): void {
+    const item = this.data.actionSheetItem;
+    if (!item) return;
+    inboxStore.markFollowed(item.id);
+    this.closeActionSheet();
+  },
+
+  onActionNotFollow(e: WechatMiniprogram.CustomEvent): void {
+    const reason = e.detail.reason as string;
+    const item = this.data.actionSheetItem;
+    if (!item || !reason) return;
+    inboxStore.markNotFollowed(item.id, reason as BreakReason);
+    this.closeActionSheet();
+  },
+
+  closeActionSheet(): void {
+    this.setData({ showActionSheet: false, actionSheetItem: null });
+  },
+
+  onDismissBanner(): void {
+    inboxStore.dismissBanner();
+  },
+
+  onBannerTap(): void {
+    wx.navigateTo({ url: '/pages/subscribe-guide/subscribe-guide?from=inbox' });
+  },
+
+  // 辅助方法：将 pendingList 转换为显示格式
+  computeDisplayList(rawList: DecisionLog[]): DisplayDecision[] {
+    return rawList.map(item => ({
+      ...item,
+      relativeTimeStr: relativeTime(item.created_at),
+      isExpiringSoonFlag: isExpiringSoon(item.created_at),
+      countdown: expireCountdown(item.created_at),
+    }));
+  },
+
+  noop(): void {
+    // 空操作，用于阻止事件冒泡
   },
 });

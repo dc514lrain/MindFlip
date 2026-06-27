@@ -127,4 +127,18 @@
   <view class="loading-overlay" wx:if="{{loading}}">
     <text class="loading-text">分析中...</text>
   </view>
+
+  <!-- 订阅消息授权弹窗 -->
+  <subscribe-modal
+    visible="{{showSubscribeModal}}"
+    tool-name="优缺点分析"
+    bind:result="onSubscribeResult"
+    bind:close="onSubscribeResult"
+  />
+
+  <!-- 首次使用引导浮层 -->
+  <onboarding-toast
+    visible="{{showOnboarding}}"
+    bind:close="onOnboardingClose"
+  />
 </view>

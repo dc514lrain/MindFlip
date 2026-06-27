@@ -161,6 +161,95 @@
   color: var(--color-secondary);
 }
 
+/* VIP 状态区（VIP 用户） */
+.vip-status {
+  background: linear-gradient(135deg, #1A1A1A 0%, #3A3A3A 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vip-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.vip-expire {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 工具槽位 */
+.slots-section {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.slots-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.slots-text {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.slots-bar {
+  height: 12rpx;
+  background: var(--color-border);
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.slots-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 6rpx;
+  transition: width 0.3s ease;
+}
+
+.slots-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary);
+}
+
+/* 人格标签卡 */
+.personality-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  box-shadow: var(--shadow-card);
+}
+
+.personality-icon {
+  font-size: 80rpx;
+}
+
+.personality-name {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.personality-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2rpx;
+}
+
 /* 菜单 */
 .menu-section {
   display: flex;

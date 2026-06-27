@@ -182,11 +182,29 @@
   margin-top: var(--spacing-sm, 12rpx);
 }
 
-.confirm-btn[disabled] {
+.confirm-btn.disabled {
   opacity: 0.5;
 }
 
 .cancel-text {
   font-size: var(--font-size-lg, 32rpx);
+  color: var(--color-secondary, #6B6B6B);
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  margin-top: 8rpx;
+  padding: 4rpx 8rpx;
+}
+
+.back-arrow {
+  font-size: 24rpx;
+  color: var(--color-secondary, #6B6B6B);
+}
+
+.back-text {
+  font-size: var(--font-size-sm, 24rpx);
   color: var(--color-secondary, #6B6B6B);
 }

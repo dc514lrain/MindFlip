@@ -1,34 +1,58 @@
 // 订阅消息授权引导页
 
-import { requestSubscribeAuth, getSubscribeGuideConfig } from '../../core/utils/subscribe';
+import { dataService } from '../../core/services/DataService';
 
 interface SubscribeGuidePageData {
-  from: string;
-  sceneDescription: string;
+  authorized: boolean;
+  rejectedCount: number;
+  loading: boolean;
 }
 
 Page({
   data: {
-    from: '',
-    sceneDescription: '每天 9:00 收到待决清单推送提醒，帮助你养成复盘习惯',
+    authorized: false,
+    rejectedCount: 0,
+    loading: true,
   } as SubscribeGuidePageData,
 
   onLoad(options: Record<string, string>): void {
-    const from = options.from || 'banner';
-    this.setData({ from });
-    const config = getSubscribeGuideConfig(from);
-    this.setData({ sceneDescription: config.description || this.data.sceneDescription });
+    this.loadStatus();
+  },
+
+  async loadStatus(): Promise<void> {
+    // 订阅状态由 subscribe 云函数管理，前端无法直接查询
+    // 这里假设未授权状态，引导用户开启
+    this.setData({ loading: false });
   },
 
   async onAuthorize(): Promise<void> {
-    const isAuthorized = await requestSubscribeAuth({
-      templateId: 'YOUR_TEMPLATE_ID',
-      scene: this.data.from,
-    });
-    if (isAuthorized) {
-      wx.showToast({ title: '已开启提醒', icon: 'success' });
+    try {
+      const res = await new Promise<WechatMiniprogram.RequestSubscribeMessageSuccessCallbackResult>((resolve, reject) => {
+        wx.requestSubscribeMessage({
+          tmplIds: ['YOUR_TEMPLATE_ID'],
+          success: resolve,
+          fail: reject,
+        });
+      });
+      const accepted = res['YOUR_TEMPLATE_ID'] === 'accept';
+      await dataService.updateSubscribeAuth(accepted);
+      this.setData({ authorized: accepted });
+      if (accepted) {
+        wx.showToast({ title: '授权成功', icon: 'success' });
+        setTimeout(() => wx.navigateBack(), 1500);
+      }
+    } catch {
+      wx.showToast({ title: '授权失败，请稍后重试', icon: 'none' });
     }
-    wx.navigateBack();
+  },
+
+  onOpenSettings(): void {
+    wx.openSetting({
+      success: () => {
+        // 用户可能手动开启了订阅
+        this.setData({ authorized: true });
+      },
+    });
   },
 
   onSkip(): void {

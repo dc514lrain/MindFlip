@@ -3,6 +3,7 @@
 import { createDiceAnimation } from './dice.canvas';
 import { dataService } from '../../core/services/DataService';
 import { formatTime } from '../../core/utils/date';
+import { app as appInst } from '../../app';
 
 // ── DiceEngine 核心算法 ────────────────────────────────────────────────────────
 interface DiceResult {
@@ -33,6 +34,8 @@ interface DicePageData {
   targetFace: number;
   resultTime: string;
   memo: string;
+  showSubscribeModal: boolean;
+  showOnboarding: boolean;
 }
 
 Page({
@@ -46,6 +49,8 @@ Page({
     targetFace: 0,
     resultTime: '',
     memo: '',
+    showSubscribeModal: false,
+    showOnboarding: false,
   } as DicePageData,
 
   animationRef: null as ReturnType<typeof createDiceAnimation> | null,
@@ -87,7 +92,7 @@ Page({
     const multiResult = DiceEngine.rollMultiple(this.data.diceCount);
 
     if (this.animationRef) {
-      await this.animationRef.play(multiResult.total);
+      await this.animationRef.play(multiResult.results.map(r => r.face_count));
     }
 
     const now = Date.now();
@@ -112,11 +117,34 @@ Page({
         semantic_result: semanticResult,
         user_memo: memo || undefined,
       });
+
+      appInst.recordRecentTool('dice');
+
+      const subscribed = wx.getStorageSync('subscribed');
+      if (!subscribed) {
+        this.setData({ showSubscribeModal: true });
+        wx.setStorageSync('subscribed', 'shown');
+      }
+
+      // 触发首次使用引导（仅显示一次）
+      if (!appInst.isOnboardingShown()) {
+        this.setData({ showOnboarding: true });
+        appInst.triggerOnboarding();
+      }
+
       wx.showToast({ title: '已存入待决清单', icon: 'success' });
       setTimeout(() => wx.switchTab({ url: '/pages/review/review' }), 800);
     } catch {
       wx.showToast({ title: '保存失败，请重试', icon: 'none' });
     }
+  },
+
+  onSubscribeResult(): void {
+    this.setData({ showSubscribeModal: false });
+  },
+
+  onOnboardingClose(): void {
+    this.setData({ showOnboarding: false });
   },
 
   onRetry(): void {

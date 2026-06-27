@@ -2,6 +2,7 @@
 
 import { dataService } from '../../core/services/DataService';
 import { formatTime } from '../../core/utils/date';
+import { app as appInst } from '../../app';
 
 // ── 类型定义 ──────────────────────────────────────────────────────────────────
 interface ProItem {
@@ -46,6 +47,8 @@ interface ProsConsPageData {
   rawResult: string;
   resultTime: string;
   memo: string;
+  showSubscribeModal: boolean;
+  showOnboarding: boolean;
 }
 
 function genId(): string {
@@ -66,6 +69,8 @@ Page({
     rawResult: '',
     resultTime: '',
     memo: '',
+    showSubscribeModal: false,
+    showOnboarding: false,
   } as ProsConsPageData,
 
   onTopicInput(e: WechatMiniprogram.Input): void {
@@ -136,11 +141,34 @@ Page({
         semantic_result: `${topic}：${semanticResult}`,
         user_memo: memo || undefined,
       });
+
+      appInst.recordRecentTool('pros_cons');
+
+      const subscribed = wx.getStorageSync('subscribed');
+      if (!subscribed) {
+        this.setData({ showSubscribeModal: true });
+        wx.setStorageSync('subscribed', 'shown');
+      }
+
+      // 触发首次使用引导（仅显示一次）
+      if (!appInst.isOnboardingShown()) {
+        this.setData({ showOnboarding: true });
+        appInst.triggerOnboarding();
+      }
+
       wx.showToast({ title: '已存入待决清单', icon: 'success' });
       setTimeout(() => wx.switchTab({ url: '/pages/review/review' }), 800);
     } catch {
       wx.showToast({ title: '保存失败，请重试', icon: 'none' });
     }
+  },
+
+  onSubscribeResult(): void {
+    this.setData({ showSubscribeModal: false });
+  },
+
+  onOnboardingClose(): void {
+    this.setData({ showOnboarding: false });
   },
 
   onReset(): void {

@@ -35,6 +35,10 @@ class DataService {
     return callFunction('login', { code });
   }
 
+  async getUserProfile(): Promise<unknown> {
+    return callFunction('login', { action: 'get_profile' });
+  }
+
   getCachedUser(): unknown | null {
     const raw = wx.getStorageSync(this.userCacheKey);
     return raw ? JSON.parse(raw) : null;
@@ -116,6 +120,11 @@ class DataService {
 
   async updateSubscribeAuth(isAuthorized: boolean): Promise<void> {
     return callFunction('subscribe', { action: 'update_auth', is_authorized: isAuthorized });
+  }
+
+  async getSubscribeAuthStatus(): Promise<{ is_authorized: boolean; rejected_count: number }> {
+    const res = await callFunction('subscribe', { action: 'get_auth' });
+    return (res ?? { is_authorized: false, rejected_count: 0 }) as { is_authorized: boolean; rejected_count: number };
   }
 
   // ── 本地缓存 ─────────────────────────────────────────────────────────────

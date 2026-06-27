@@ -81,6 +81,11 @@
   gap: var(--spacing-sm, 12rpx);
 }
 
+.benefit-check {
+  color: var(--color-followed, #3CB371);
+  font-weight: 700;
+}
+
 .modal-actions {
   display: flex;
   flex-direction: column;

@@ -1,9 +1,9 @@
 // 硬币工具 TypeScript 页面逻辑
-// 架构: coin.ts (核心算法 + 页面逻辑) + coin.canvas.ts (Canvas 2D 动画) + coin.wxml (视图)
 
 import { createCoinAnimation } from './coin.canvas';
 import { dataService } from '../../core/services/DataService';
 import { formatTime } from '../../core/utils/date';
+import { app as appInst } from '../../app';
 
 // ── CoinEngine 核心算法 ────────────────────────────────────────────────────────
 const CoinEngine = {
@@ -26,9 +26,9 @@ interface CoinPageData {
   semanticResult: string;
   resultTime: string;
   memo: string;
+  showSubscribeModal: boolean;
+  showOnboarding: boolean;
 }
-
-let animation: ReturnType<typeof createCoinAnimation> | null = null;
 
 Page({
   data: {
@@ -41,12 +41,13 @@ Page({
     semanticResult: '',
     resultTime: '',
     memo: '',
+    showSubscribeModal: false,
+    showOnboarding: false,
   } as CoinPageData,
 
   animationRef: null as ReturnType<typeof createCoinAnimation> | null,
 
   onLoad(): void {
-    // Canvas 2D 初始化：在 onLoad 中预先创建上下文，避免首帧延迟
     const query = wx.createSelectorQuery();
     query.select('#coin-canvas')
       .fields({ node: true, size: true })
@@ -114,11 +115,36 @@ Page({
         semantic_result: semanticResult,
         user_memo: memo || undefined,
       });
+
+      // 记录最近使用
+      appInst.recordRecentTool('coin');
+
+      // 检查是否需要显示订阅授权弹窗
+      const subscribed = wx.getStorageSync('subscribed');
+      if (!subscribed) {
+        this.setData({ showSubscribeModal: true });
+        wx.setStorageSync('subscribed', 'shown');
+      }
+
+      // 触发首次使用引导（仅显示一次）
+      if (!appInst.isOnboardingShown()) {
+        this.setData({ showOnboarding: true });
+        appInst.triggerOnboarding();
+      }
+
       wx.showToast({ title: '已存入待决清单', icon: 'success' });
       setTimeout(() => wx.switchTab({ url: '/pages/review/review' }), 800);
     } catch {
       wx.showToast({ title: '保存失败，请重试', icon: 'none' });
     }
+  },
+
+  onSubscribeResult(e: WechatMiniprogram.CustomEvent): void {
+    this.setData({ showSubscribeModal: false });
+  },
+
+  onOnboardingClose(): void {
+    this.setData({ showOnboarding: false });
   },
 
   onRetry(): void {

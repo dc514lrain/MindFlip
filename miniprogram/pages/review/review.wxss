@@ -242,3 +242,43 @@
   padding: var(--spacing-xl);
 }
 .loading-text { font-size: var(--font-size-base); color: var(--color-secondary); }
+
+/* 订阅消息 Banner */
+.subscribe-banner {
+  background: #1A1A1A;
+  color: #fff;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.banner-text {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.9);
+  flex: 1;
+}
+
+.banner-dismiss {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 4rpx 8rpx;
+  flex-shrink: 0;
+}
+
+/* 即将过期项高亮 */
+.inbox-item.expiring {
+  border-left: 4rpx solid var(--color-warning);
+}
+
+/* 工具图标文字 */
+.tool-icon { font-size: 22rpx; margin-right: 4rpx; }
+.tool-name { font-size: var(--font-size-xs); }
+
+/* 空状态副标题 */
+.empty-sub {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary);
+}

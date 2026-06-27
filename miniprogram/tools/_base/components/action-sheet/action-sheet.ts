@@ -18,12 +18,20 @@ Component({
   properties: {
     visible: { type: Boolean, value: false },
     decisionText: { type: String, value: '' },
-    showReasons: { type: Boolean, value: false },
   },
 
   data: {
     breakReasonOptions: BREAK_REASON_OPTIONS,
     selectedReason: '' as string,
+    showReasons: false,
+  },
+
+  observers: {
+    'visible': function (val: boolean) {
+      if (!val) {
+        this.resetState();
+      }
+    },
   },
 
   methods: {
@@ -37,13 +45,7 @@ Component({
     },
 
     onNotFollowed(): void {
-      if (this.properties.showReasons) {
-        // 展开原因选择
-        this.setData({ showReasons: true });
-      } else {
-        this.triggerEvent('notfollow', { reason: null });
-        this.resetState();
-      }
+      this.setData({ showReasons: true });
     },
 
     onSelectReason(e: WechatMiniprogram.TouchEvent): void {
@@ -58,6 +60,10 @@ Component({
       this.resetState();
     },
 
+    onBack(): void {
+      this.setData({ showReasons: false, selectedReason: '' });
+    },
+
     onCancel(): void {
       this.triggerEvent('close');
       this.resetState();
@@ -68,7 +74,7 @@ Component({
     },
 
     noop(): void {
-      // 阻止冒泡
+      // 阻止事件冒泡
     },
   },
 });

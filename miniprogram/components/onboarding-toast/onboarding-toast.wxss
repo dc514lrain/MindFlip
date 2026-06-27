@@ -1,0 +1,49 @@
+/* 首次使用引导浮层样式 */
+
+.onboarding-toast {
+  position: fixed;
+  bottom: calc(180rpx + env(safe-area-inset-bottom));
+  left: var(--spacing-lg, 24rpx);
+  right: var(--spacing-lg, 24rpx);
+  z-index: var(--z-toast, 300);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(20rpx);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.onboarding-toast.visible {
+  pointer-events: all;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-content {
+  background: var(--color-primary, #1A1A1A);
+  border-radius: var(--radius-xl, 24rpx);
+  padding: var(--spacing-lg, 24rpx);
+  box-shadow: var(--shadow-float, 0 12rpx 48rpx rgba(0, 0, 0, 0.16));
+}
+
+.toast-text {
+  font-size: var(--font-size-base, 28rpx);
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  display: block;
+  text-align: center;
+}
+
+.toast-progress {
+  height: 4rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2rpx;
+  margin-top: var(--spacing-md, 16rpx);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-accent, #E8B84B);
+  border-radius: 2rpx;
+  transition: width 0.1s linear;
+}

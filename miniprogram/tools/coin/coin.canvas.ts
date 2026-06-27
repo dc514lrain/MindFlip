@@ -69,27 +69,79 @@ export function createCoinAnimation(): CoinAnimationInstance {
     ctxRef.translate(cx + shakeX, cy + shakeY);
     ctxRef.scale(Math.max(scaleX, 0.05), scaleY);
 
-    // 硬币背景色
-    ctxRef.fillStyle = '#E8B84B';
+    // 硬币主体金属渐变
+    const coinGradient = ctxRef.createLinearGradient(-radius, -radius, radius, radius);
+    if (phaseType === 'revealing') {
+      // 揭晓后使用结果色（正面金/反面银）
+      const isHeads = result === 'heads';
+      coinGradient.addColorStop(0, isHeads ? '#F5D77A' : '#D0D0D0');
+      coinGradient.addColorStop(0.4, isHeads ? '#E8B84B' : '#A8A8A8');
+      coinGradient.addColorStop(0.7, isHeads ? '#C9942E' : '#8C8C8C');
+      coinGradient.addColorStop(1, isHeads ? '#A67620' : '#707070');
+    } else {
+      coinGradient.addColorStop(0, '#F5D77A');
+      coinGradient.addColorStop(0.4, '#E8B84B');
+      coinGradient.addColorStop(0.7, '#C9942E');
+      coinGradient.addColorStop(1, '#A67620');
+    }
+
+    ctxRef.fillStyle = coinGradient;
     ctxRef.beginPath();
     ctxRef.arc(0, 0, radius, 0, Math.PI * 2);
     ctxRef.fill();
 
+    // 内圈装饰
+    const innerR = radius * 0.82;
+    const innerGradient = ctxRef.createRadialGradient(0, 0, innerR * 0.7, 0, 0, innerR);
+    innerGradient.addColorStop(0, 'rgba(255,255,255,0.18)');
+    innerGradient.addColorStop(1, 'rgba(255,255,255,0)');
+    ctxRef.fillStyle = innerGradient;
+    ctxRef.beginPath();
+    ctxRef.arc(0, 0, innerR, 0, Math.PI * 2);
+    ctxRef.fill();
+
     // 硬币描边
-    ctxRef.strokeStyle = '#C9942E';
+    ctxRef.strokeStyle = phaseType === 'revealing' && result === 'heads'
+      ? '#8B6914'
+      : '#B8860B';
     ctxRef.lineWidth = 4;
     ctxRef.stroke();
 
-    // 硬币文字（正面:正面，背面:反面）
+    // 内圈细线
+    ctxRef.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctxRef.lineWidth = 1.5;
+    ctxRef.beginPath();
+    ctxRef.arc(0, 0, innerR, 0, Math.PI * 2);
+    ctxRef.stroke();
+
+    // 硬币文字（揭晓后显示用户选项或正面/反面）
     const text = phaseType === 'revealing'
-      ? (result === 'heads' ? '正面' : '反面')
+      ? (result === 'heads' ? '正' : '反')
       : '?';
 
-    ctxRef.fillStyle = '#1A1A1A';
-    ctxRef.font = `bold ${radius * 0.5}px -apple-system, sans-serif`;
+    // 文字阴影
+    ctxRef.shadowColor = 'rgba(0,0,0,0.3)';
+    ctxRef.shadowBlur = 6;
+    ctxRef.shadowOffsetY = 2;
+
+    ctxRef.fillStyle = phaseType === 'revealing' && result === 'heads'
+      ? '#6B4A10'
+      : phaseType === 'revealing'
+        ? '#3A3A3A'
+        : 'rgba(100,70,20,0.8)';
+    ctxRef.font = `bold ${radius * 0.48}px -apple-system, sans-serif`;
     ctxRef.textAlign = 'center';
     ctxRef.textBaseline = 'middle';
-    ctxRef.fillText(text, 0, 0);
+    ctxRef.fillText(text, 0, 2);
+
+    // 底部小标签（揭晓时显示）
+    if (phaseType === 'revealing') {
+      ctxRef.shadowBlur = 0;
+      ctxRef.shadowOffsetY = 0;
+      ctxRef.font = `${radius * 0.14}px -apple-system, sans-serif`;
+      ctxRef.fillStyle = 'rgba(0,0,0,0.35)';
+      ctxRef.fillText(result === 'heads' ? 'HEADS' : 'TAILS', 0, radius * 0.62);
+    }
 
     ctxRef.restore();
   }

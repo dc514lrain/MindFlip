@@ -41,6 +41,7 @@ interface StatsOverview {
     expired: number;
   };
   break_reason_distribution: Record<string, number>;
+  recent_timeline: unknown[];
 }
 
 class StatsStore {
@@ -56,8 +57,10 @@ class StatsStore {
   async refreshOverview(): Promise<void> {
     runInAction(() => { this.loading = true; });
     try {
-      // TODO: const res = await dataService.getGlobalStats();
-      // runInAction(() => { this.overview = res; });
+      const res = await dataService.getGlobalStats() as StatsOverview;
+      runInAction(() => { this.overview = res; });
+    } catch {
+      // 静默失败
     } finally {
       runInAction(() => { this.loading = false; });
     }
@@ -70,9 +73,9 @@ class StatsStore {
       return;
     }
     try {
-      // TODO: const res = await dataService.getPersonality(period);
-      // dataService.cachePersonality(res, this.personalityCacheMs);
-      // runInAction(() => { this.personality = res; });
+      const res = await dataService.getPersonality(period) as Personality;
+      dataService.cachePersonality(res, this.personalityCacheMs);
+      runInAction(() => { this.personality = res; });
     } catch {
       // 静默失败
     }
@@ -83,12 +86,36 @@ class StatsStore {
     return p ? Math.min(p.current / p.required, 1) : 0;
   }
 
+  get preheatCount(): number {
+    return this.personality?.preheat_progress?.current ?? 0;
+  }
+
   get primaryTag(): PersonalityTag['primary'] | null {
     return this.personality?.tags?.primary ?? null;
   }
 
+  get primaryIcon(): string {
+    return this.personality?.tags?.primary?.icon ?? '';
+  }
+
+  get primaryTagName(): string {
+    return this.personality?.tags?.primary?.name ?? '';
+  }
+
   get secondaryTags(): PersonalityTag['secondary'] {
     return this.personality?.tags?.secondary ?? [];
+  }
+
+  get secondaryTagText(): string {
+    return this.secondaryTags.map(t => `${t.icon} ${t.name}`).join(' · ');
+  }
+
+  get totalDecisions(): number {
+    return this.overview?.total_decisions ?? 0;
+  }
+
+  get followRate(): number {
+    return this.overview?.total_follow_rate ?? 0;
   }
 }
 

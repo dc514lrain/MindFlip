@@ -6,7 +6,11 @@
     "pages/me/me",
     "pages/tool-run/tool-run",
     "pages/tool-stats/tool-stats",
-    "pages/subscribe-guide/subscribe-guide"
+    "pages/subscribe-guide/subscribe-guide",
+    "tools/coin/coin",
+    "tools/dice/dice",
+    "tools/roulette/roulette",
+    "tools/pros-cons/pros-cons"
   ],
   "window": {
     "navigationBarTitleText": "决策大师",

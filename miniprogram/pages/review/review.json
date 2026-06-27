@@ -1,5 +1,7 @@
 {
   "renderer": "skyline",
   "componentFramework": "glass-easel",
-  "usingComponents": {}
+  "usingComponents": {
+    "action-sheet": "/tools/_base/components/action-sheet/action-sheet"
+  }
 }

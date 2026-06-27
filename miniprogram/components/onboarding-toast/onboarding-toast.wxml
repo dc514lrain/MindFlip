@@ -1,0 +1,9 @@
+<!-- 首次使用引导浮层组件 -->
+<view class="onboarding-toast {{visible ? 'visible' : ''}}" wx:if="{{visible}}">
+  <view class="toast-content" bindtap="onDismiss">
+    <text class="toast-text">你已经迈出了第一步。24 小时后，我们会问你最终的决定。这，就是复盘的力量。</text>
+    <view class="toast-progress">
+      <view class="progress-fill" style="width: {{progress}}%;" />
+    </view>
+  </view>
+</view>

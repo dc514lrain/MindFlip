@@ -40,8 +40,20 @@ class AppStore {
     dataService.cacheUser(user);
   }
 
+  async refreshUser(): Promise<void> {
+    try {
+      const res = await dataService.getUserProfile();
+      if (res) {
+        this.setUser(res as UserProfile);
+      }
+    } catch {
+      // 静默失败
+    }
+  }
+
   async refreshVip(): Promise<void> {
-    // TODO: 调用云函数刷新 VIP 状态
+    // 重新获取用户信息以更新 VIP 状态
+    await this.refreshUser();
   }
 
   get vipStatus(): 'free' | 'vip' {
@@ -55,6 +67,14 @@ class AppStore {
   get toolSlotsRemaining(): number {
     if (!this.user) return 0;
     return this.user.tool_slot_max - this.user.tool_slot_used;
+  }
+
+  get nickname(): string {
+    return this.user?.nickname ?? '微信用户';
+  }
+
+  get avatarUrl(): string {
+    return this.user?.avatar_url ?? '';
   }
 }
 

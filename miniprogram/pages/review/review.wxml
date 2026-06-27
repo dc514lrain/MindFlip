@@ -5,7 +5,7 @@
   <view class="personality-section">
     <view class="section-header">
       <text class="section-title">本周人格画像</text>
-      <text class="section-tag">{{primaryTag}}</text>
+      <text class="section-tag" wx:if="{{primaryTag}}">{{primaryTag}}</text>
     </view>
     <view class="tag-display" wx:if="{{primaryTag}}">
       <text class="primary-tag-icon">{{primaryIcon}}</text>
@@ -17,7 +17,7 @@
     <view class="tag-empty" wx:else>
       <text class="empty-hint">标记 10 次决策后解锁人格标签</text>
       <view class="progress-bar">
-        <view class="progress-fill" style="width: {{preheatProgress}}%" />
+        <view class="progress-fill" style="width: {{preheatProgress * 100}}%" />
       </view>
       <text class="progress-text">{{preheatCount}} / 10</text>
     </view>
@@ -39,6 +39,12 @@
     </view>
   </view>
 
+  <!-- 订阅消息 Banner -->
+  <view class="subscribe-banner" wx:if="{{showBanner}}" bindtap="onBannerTap">
+    <text class="banner-text">开启复盘送达服务，不再错过潜意识的回音 →</text>
+    <view class="banner-dismiss" bindtap="onDismissBanner" catchtap="noop">✕</view>
+  </view>
+
   <!-- 待决清单 -->
   <view class="inbox-section">
     <view class="section-header">
@@ -46,32 +52,61 @@
       <text class="section-count" wx:if="{{pendingCount > 0}}">{{pendingCount}} 条</text>
     </view>
 
-    <view class="inbox-list" wx:if="{{!loading}}">
-      <view class="inbox-item" wx:for="{{pendingList}}" wx:key="_id">
-        <view class="item-top">
-          <view class="item-tool-badge {{item.tool_type}}">{{item.tool_name}}</view>
-          <text class="item-time">{{item.relativeTime}}</text>
-        </view>
-        <text class="item-result">{{item.semantic_result}}</text>
-        <text class="item-memo" wx:if="{{item.user_memo}}">{{item.user_memo}}</text>
-        <view class="item-countdown" wx:if="{{item.isExpiringSoon}}">
-          <text>⏰ {{item.countdown}}</text>
-        </view>
-        <view class="item-actions">
-          <button class="action-btn followed" bindtap="onMarkFollowed" data-id="{{item._id}}">遵循了</button>
-          <button class="action-btn not-followed" bindtap="onMarkNotFollowed" data-id="{{item._id}}">没遵循</button>
-        </view>
-      </view>
-
-      <view class="empty-state" wx:if="{{pendingList.length === 0 && !loading}}">
-        <text class="empty-icon">🎉</text>
-        <text class="empty-text">所有决定都已复盘！</text>
-      </view>
-    </view>
-
+    <!-- 加载中 -->
     <view class="loading-state" wx:if="{{loading}}">
       <text class="loading-text">加载中...</text>
     </view>
+
+    <!-- 列表 -->
+    <view class="inbox-list" wx:elif="{{pendingList.length > 0}}">
+      <view
+        class="inbox-item {{item.isExpiringSoonFlag ? 'expiring' : ''}}"
+        wx:for="{{pendingList}}"
+        wx:key="_id"
+      >
+        <view class="item-top">
+          <view class="item-tool-badge {{item.tool_type === 'coin' ? 'coin' : item.tool_type === 'dice' ? 'dice' : item.tool_type === 'roulette' ? 'roulette' : 'pros_cons'}}">
+            <text class="tool-icon">{{item.tool_type === 'coin' ? '🪙' : item.tool_type === 'dice' ? '🎲' : item.tool_type === 'roulette' ? '🎯' : '⚖️'}}</text>
+            <text class="tool-name">{{item.tool_name}}</text>
+          </view>
+          <text class="item-time">{{item.relativeTimeStr}}</text>
+        </view>
+        <text class="item-result">{{item.semantic_result}}</text>
+        <text class="item-memo" wx:if="{{item.user_memo}}">{{item.user_memo}}</text>
+        <view class="item-countdown" wx:if="{{item.isExpiringSoonFlag}}">
+          <text>⏰ {{item.countdown}}</text>
+        </view>
+        <view class="item-actions">
+          <button
+            class="action-btn followed"
+            bindtap="onMarkFollowed"
+            data-id="{{item._id}}"
+          >遵循了</button>
+          <button
+            class="action-btn not-followed"
+            bindtap="onMarkNotFollowed"
+            data-id="{{item._id}}"
+          >没遵循</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">🎉</text>
+      <text class="empty-text">所有决定都已复盘！</text>
+      <text class="empty-sub">休息一下，或者开始新的决策</text>
+    </view>
   </view>
+
+  <!-- Action Sheet 组件 -->
+  <action-sheet
+    id="main-action-sheet"
+    visible="{{showActionSheet}}"
+    decision-text="{{actionSheetItem ? actionSheetItem.semantic_result : ''}}"
+    bind:follow="onActionFollow"
+    bind:notfollow="onActionNotFollow"
+    bind:close="closeActionSheet"
+  />
 
 </view>

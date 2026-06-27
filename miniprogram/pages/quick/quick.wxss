@@ -2,47 +2,131 @@
 
 .quick-page {
   min-height: 100vh;
-  background: var(--color-bg);
-  padding: var(--spacing-xxl) var(--spacing-lg);
-  padding-bottom: 160rpx;
+  background: var(--color-bg, #FAFAF8);
+  padding: var(--spacing-xl, 32rpx) var(--spacing-lg, 24rpx) 200rpx;
+}
+
+.quick-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 8rpx);
+  margin-bottom: var(--spacing-xl, 32rpx);
+  padding-top: env(safe-area-inset-top);
+}
+
+.header-title {
+  font-size: var(--font-size-xxl, 44rpx);
+  font-weight: 800;
+  color: var(--color-primary, #1A1A1A);
+}
+
+.header-sub {
+  font-size: var(--font-size-sm, 24rpx);
+  color: var(--color-secondary, #6B6B6B);
+}
+
+/* 分组 */
+.section {
+  margin-bottom: var(--spacing-xl, 32rpx);
+}
+
+.section-label {
+  font-size: var(--font-size-sm, 24rpx);
+  font-weight: 600;
+  color: var(--color-secondary, #6B6B6B);
+  text-transform: uppercase;
+  letter-spacing: 2rpx;
+  margin-bottom: var(--spacing-md, 16rpx);
+}
+
+/* 最近使用大图标网格 */
+.quick-tools-grid {
+  display: flex;
+  gap: var(--spacing-md, 16rpx);
+  flex-wrap: wrap;
+}
+
+.quick-tool-card {
+  flex: 1;
+  min-width: 200rpx;
+  background: var(--color-bg-card, #fff);
+  border-radius: var(--radius-lg, 16rpx);
+  padding: var(--spacing-lg, 24rpx);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: var(--spacing-xxl);
+  gap: var(--spacing-sm, 12rpx);
+  box-shadow: var(--shadow-card);
+  border: 2rpx solid transparent;
+  transition: all var(--duration-fast) ease;
 }
 
-.quick-hint {
+.quick-tool-card:active {
+  border-color: var(--color-accent, #E8B84B);
+  transform: scale(0.97);
+}
+
+.quick-tool-icon {
+  font-size: 64rpx;
+}
+
+.quick-tool-name {
+  font-size: var(--font-size-base, 28rpx);
+  font-weight: 600;
+  color: var(--color-primary, #1A1A1A);
+}
+
+/* 全部工具列表 */
+.all-tools-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-sm, 12rpx);
 }
 
-.hint-icon { font-size: 80rpx; }
-.hint-text { font-size: var(--font-size-lg); color: var(--color-secondary); font-weight: 600; }
-
-.quick-tools {
+.all-tool-item {
   display: flex;
-  gap: var(--spacing-xl);
+  align-items: center;
+  gap: var(--spacing-md, 16rpx);
+  background: var(--color-bg-card, #fff);
+  border-radius: var(--radius-md, 12rpx);
+  padding: var(--spacing-md, 16rpx) var(--spacing-lg, 24rpx);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-fast) ease;
 }
 
-.quick-card {
-  width: 200rpx;
-  height: 200rpx;
-  border-radius: var(--radius-xl);
+.all-tool-item:active {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.tool-icon {
+  font-size: 40rpx;
+  flex-shrink: 0;
+}
+
+.tool-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-md);
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
+  gap: 4rpx;
+  min-width: 0;
 }
 
-.quick-card.coin { background: linear-gradient(135deg, #FFF3D4 0%, #FFE0A0 100%); }
-.quick-card.dice { background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); }
-.quick-card.roulette { background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%); }
+.tool-name {
+  font-size: var(--font-size-base, 28rpx);
+  font-weight: 600;
+  color: var(--color-primary, #1A1A1A);
+}
 
-.quick-icon { font-size: 80rpx; }
-.quick-name { font-size: var(--font-size-base); font-weight: 700; color: var(--color-primary); }
+.tool-desc {
+  font-size: var(--font-size-xs, 22rpx);
+  color: var(--color-secondary, #6B6B6B);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-arrow {
+  font-size: 32rpx;
+  color: var(--color-secondary, #6B6B6B);
+  flex-shrink: 0;
+}

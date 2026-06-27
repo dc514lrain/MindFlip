@@ -10,7 +10,7 @@ const prosConsManifest: ToolManifest = {
   icon: '/assets/icons/pros-cons.svg',
   group: 'decision',
   inboxPolicy: 'user_choice',
-  runRoute: '/pages/tool-run/tool-run?id=pros_cons',
+  runRoute: '/tools/pros-cons/pros-cons',
   statsRoute: '/pages/tool-stats/tool-stats?id=pros_cons',
   statsDimensions: [
     'frequency',

@@ -1,15 +1,27 @@
 <!-- 我的 Tab -->
 <view class="me-page">
+
   <!-- 用户信息区 -->
   <view class="user-section">
     <view class="user-avatar-wrap">
-      <image class="user-avatar" src="{{user.avatar_url || '/assets/icons/default-avatar.png'}}" mode="aspectFill" />
+      <image
+        class="user-avatar"
+        src="{{user.avatar_url || '/assets/icons/default-avatar.svg'}}"
+        mode="aspectFill"
+      />
       <view class="vip-badge" wx:if="{{isVip}}">VIP</view>
     </view>
     <view class="user-info">
       <text class="user-nickname">{{user.nickname || '微信用户'}}</text>
       <text class="user-level">{{isVip ? 'VIP 会员' : '免费用户'}}</text>
     </view>
+  </view>
+
+  <!-- 人格标签 -->
+  <view class="personality-card" wx:if="{{primaryTag}}">
+    <text class="personality-icon">{{primaryIcon}}</text>
+    <text class="personality-name">{{primaryTag}}</text>
+    <text class="personality-label">本周人格</text>
   </view>
 
   <!-- VIP 升级引导（Free 用户） -->
@@ -21,32 +33,42 @@
     </view>
   </view>
 
-  <!-- 统计数据 -->
-  <view class="stats-grid">
-    <view class="stat-item">
-      <text class="stat-value">{{stats.total_decisions || 0}}</text>
-      <text class="stat-label">总决策</text>
+  <!-- VIP 权益（VIP 用户） -->
+  <view class="vip-status" wx:if="{{isVip}}">
+    <text class="vip-title">VIP 会员</text>
+    <text class="vip-expire">会员权益已激活</text>
+  </view>
+
+  <!-- 工具槽位 -->
+  <view class="slots-section">
+    <view class="section-header">
+      <text class="section-title">我的工具箱</text>
     </view>
-    <view class="stat-item">
-      <text class="stat-value">{{stats.total_follow_rate || 0}}%</text>
-      <text class="stat-label">遵循率</text>
-    </view>
-    <view class="stat-item">
-      <text class="stat-value">{{stats.weekly_decisions || 0}}</text>
-      <text class="stat-label">本周</text>
+    <view class="slots-card">
+      <view class="slots-progress">
+        <text class="slots-text">{{toolSlotsUsed}} / {{toolSlotsMax}}</text>
+        <view class="slots-bar">
+          <view class="slots-fill" style="width: {{toolSlotsMax > 0 ? (toolSlotsUsed / toolSlotsMax * 100) : 0}}%;" />
+        </view>
+        <text class="slots-hint">已用 {{toolSlotsUsed}} 个，剩余 {{toolSlotsMax - toolSlotsUsed}} 个</text>
+      </view>
     </view>
   </view>
 
-  <!-- 人格标签 -->
-  <view class="personality-section" wx:if="{{personality}}">
-    <view class="section-title">人格档案</view>
-    <view class="tag-card" wx:if="{{personality.tags && personality.tags.primary}}">
-      <text class="tag-icon">{{personality.tags.primary.icon}}</text>
-      <text class="tag-name">{{personality.tags.primary.name}}</text>
+  <!-- 统计数据 -->
+  <view class="stats-grid">
+    <view class="stat-item">
+      <text class="stat-value">{{overview ? overview.total_decisions : 0}}</text>
+      <text class="stat-label">总决策</text>
     </view>
-    <block wx:if="{{personality.tags && personality.tags.secondary}}">
-      <text class="tag-secondary" wx:for="{{personality.tags.secondary}}" wx:key="*this">{{item.icon}} {{item.name}}</text>
-    </block>
+    <view class="stat-item">
+      <text class="stat-value">{{overview ? overview.total_follow_rate : 0}}%</text>
+      <text class="stat-label">遵循率</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{overview && overview.tool_distribution ? overview.tool_distribution.length : 0}}</text>
+      <text class="stat-label">使用工具</text>
+    </view>
   </view>
 
   <!-- 菜单列表 -->
@@ -54,6 +76,11 @@
     <view class="menu-item" bindtap="goToAllStats">
       <text class="menu-icon">📊</text>
       <text class="menu-text">全部统计数据</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goToSubscribe">
+      <text class="menu-icon">🔔</text>
+      <text class="menu-text">订阅消息管理</text>
       <text class="menu-arrow">›</text>
     </view>
     <view class="menu-item" bindtap="goToPrivacy">
@@ -67,4 +94,5 @@
       <text class="menu-arrow">›</text>
     </view>
   </view>
+
 </view>

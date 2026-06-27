@@ -4,37 +4,48 @@
 <view class="action-sheet-mask {{visible ? 'visible' : ''}}" bindtap="onMaskTap" wx:if="{{visible}}">
   <view class="action-sheet" catchtap="noop">
 
-    <!-- 标题 -->
-    <view class="sheet-header">
-      <text class="sheet-title">决策复盘</text>
-      <text class="sheet-subtitle">{{decisionText}}</text>
-    </view>
+    <!-- 步骤1: 选择遵循/未遵循 -->
+    <block wx:if="{{!showReasons}}">
+      <view class="sheet-header">
+        <text class="sheet-title">决策复盘</text>
+        <text class="sheet-subtitle" wx:if="{{decisionText}}">{{decisionText}}</text>
+      </view>
 
-    <!-- 遵循选项 -->
-    <view class="sheet-item primary" bindtap="onFollowed">
-      <view class="item-icon-wrap followed">
-        <text class="item-icon">✅</text>
+      <view class="sheet-item primary" bindtap="onFollowed">
+        <view class="item-icon-wrap followed">
+          <text class="item-icon">✅</text>
+        </view>
+        <view class="item-content">
+          <text class="item-title">遵循了这个决定</text>
+          <text class="item-desc">执行了硬币/骰子的结果</text>
+        </view>
       </view>
-      <view class="item-content">
-        <text class="item-title">遵循了这个决定</text>
-        <text class="item-desc">执行了硬币/骰子的结果</text>
-      </view>
-    </view>
 
-    <!-- 未遵循选项 -->
-    <view class="sheet-item danger" bindtap="onNotFollowed">
-      <view class="item-icon-wrap not-followed">
-        <text class="item-icon">❌</text>
+      <view class="sheet-item danger" bindtap="onNotFollowed">
+        <view class="item-icon-wrap not-followed">
+          <text class="item-icon">❌</text>
+        </view>
+        <view class="item-content">
+          <text class="item-title">没有遵循</text>
+          <text class="item-desc">选择原因，继续生成人格标签</text>
+        </view>
       </view>
-      <view class="item-content">
-        <text class="item-title">没有遵循</text>
-        <text class="item-desc">选择原因，继续生成人格标签</text>
-      </view>
-    </view>
 
-    <!-- 未遵循原因选择（展开） -->
-    <view class="break-reasons {{showReasons ? 'expanded' : ''}}" wx:if="{{showReasons}}">
-      <view class="reason-title">选择未遵循原因</view>
+      <view class="sheet-item cancel" bindtap="onCancel">
+        <text class="cancel-text">取消</text>
+      </view>
+    </block>
+
+    <!-- 步骤2: 选择未遵循原因 -->
+    <block wx:if="{{showReasons}}">
+      <view class="sheet-header">
+        <text class="sheet-title">你为什么没遵循这个决定？</text>
+        <view class="back-btn" bindtap="onBack">
+          <text class="back-arrow">←</text>
+          <text class="back-text">返回</text>
+        </view>
+      </view>
+
       <view class="reason-list">
         <view
           class="reason-item {{selectedReason === item.value ? 'selected' : ''}}"
@@ -47,15 +58,13 @@
           <text class="reason-label">{{item.label}}</text>
         </view>
       </view>
-      <button class="confirm-btn" bindtap="onConfirmNotFollowed" disabled="{{!selectedReason}}">
-        确认未遵循
-      </button>
-    </view>
 
-    <!-- 取消 -->
-    <view class="sheet-item cancel" bindtap="onCancel">
-      <text class="cancel-text">取消</text>
-    </view>
+      <button
+        class="confirm-btn {{selectedReason ? '' : 'disabled'}}"
+        bindtap="onConfirmNotFollowed"
+        disabled="{{!selectedReason}}"
+      >确认</button>
+    </block>
 
   </view>
 </view>

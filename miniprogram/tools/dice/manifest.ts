@@ -10,7 +10,7 @@ const diceManifest: ToolManifest = {
   icon: '/assets/icons/dice.svg',
   group: 'instant',
   inboxPolicy: 'auto',
-  runRoute: '/pages/tool-run/tool-run?id=dice',
+  runRoute: '/tools/dice/dice',
   statsRoute: '/pages/tool-stats/tool-stats?id=dice',
   statsDimensions: [
     'frequency',

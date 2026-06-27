@@ -3,7 +3,7 @@
 import { dataService } from '../../core/services/DataService';
 import { formatTime } from '../../core/utils/date';
 import { triggerHaptic } from '../../core/utils/haptic';
-import { Easing } from '../../core/utils/easing';
+import { app as appInst } from '../../app';
 
 // ── 类型定义 ──────────────────────────────────────────────────────────────────
 interface RouletteOption {
@@ -34,6 +34,8 @@ interface RoulettePageData {
   rawResult: string;
   resultTime: string;
   memo: string;
+  showSubscribeModal: boolean;
+  showOnboarding: boolean;
 }
 
 Page({
@@ -48,6 +50,8 @@ Page({
     rawResult: '',
     resultTime: '',
     memo: '',
+    showSubscribeModal: false,
+    showOnboarding: false,
   } as RoulettePageData,
 
   onOptionInput(e: WechatMiniprogram.Input): void {
@@ -76,7 +80,7 @@ Page({
     this.setData({ loading: true, showResult: false });
     triggerHaptic('heavy');
 
-    // 模拟转动动画 (Phase 1 简化版，不使用 Canvas)
+    // 简化版转动动画 (Phase 1 不使用 Canvas)
     await new Promise<void>(resolve => setTimeout(resolve, 2000));
 
     const result = RouletteEngine.spin(validOptions);
@@ -107,11 +111,33 @@ Page({
         semantic_result: semanticResult,
         user_memo: memo || undefined,
       });
+
+      appInst.recordRecentTool('roulette');
+
+      const subscribed = wx.getStorageSync('subscribed');
+      if (!subscribed) {
+        this.setData({ showSubscribeModal: true });
+        wx.setStorageSync('subscribed', 'shown');
+      }
+
+      if (!appInst.isOnboardingShown()) {
+        this.setData({ showOnboarding: true });
+        appInst.triggerOnboarding();
+      }
+
       wx.showToast({ title: '已存入待决清单', icon: 'success' });
       setTimeout(() => wx.switchTab({ url: '/pages/review/review' }), 800);
     } catch {
       wx.showToast({ title: '保存失败，请重试', icon: 'none' });
     }
+  },
+
+  onSubscribeResult(): void {
+    this.setData({ showSubscribeModal: false });
+  },
+
+  onOnboardingClose(): void {
+    this.setData({ showOnboarding: false });
   },
 
   onRetry(): void {

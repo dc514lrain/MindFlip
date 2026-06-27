@@ -25,26 +25,37 @@ exports.main = async (event, context) => {
     .get();
 
   // 按用户聚合
-  const userMap: Record<string, number> = {};
+  const userMap = {};
   pendingRecords.data.forEach(r => {
     userMap[r._openid] = (userMap[r._openid] || 0) + 1;
   });
 
   // 过滤已拒绝订阅的用户
-  for (const openid of Object.keys(userMap)) {
+  const validUsers = [];
+  for (const [openid, count] of Object.entries(userMap)) {
     const subConfig = await db.collection('subscribe_config')
       .where({ _openid: openid })
       .limit(1)
       .get();
-    if (subConfig.data[0]?.is_authorized === false) {
-      delete userMap[openid];
-    }
+    const cfg = subConfig.data[0];
+    // 跳过未授权或永久拒绝的用户
+    if (cfg && cfg.is_authorized === false) continue;
+    validUsers.push({ openid, count });
   }
 
-  // TODO: 调用 cloud.openapi.subscribeMessage.send 逐用户发送
-  // for (const [openid, count] of Object.entries(userMap)) {
-  //   await cloud.cloud.callContainer({ ... });
-  // }
+  // 发送订阅消息
+  let notifiedCount = 0;
+  for (const { openid, count } of validUsers) {
+    try {
+      await cloud.callFunction({
+        name: 'subscribe',
+        data: { action: 'send_push', touser: openid, count },
+      });
+      notifiedCount++;
+    } catch {
+      // 单用户失败不影响整体
+    }
+  }
 
   // 2. 将超过 48h 的 pending 记录标记为 expired
   const expiredRecords = await db.collection('decision_logs')
@@ -54,11 +65,14 @@ exports.main = async (event, context) => {
     })
     .get();
 
-  const batch = db.collection('decision_logs');
   for (const record of expiredRecords.data) {
-    await batch.doc(record._id).update({
-      data: { follow_status: 'expired', expired_at: now },
-    });
+    try {
+      await db.collection('decision_logs').doc(record._id).update({
+        data: { follow_status: 'expired', expired_at: now },
+      });
+    } catch {
+      // 单条失败不影响
+    }
   }
 
   // 3. 每周五 17:00 额外执行人格标签计算
@@ -66,14 +80,18 @@ exports.main = async (event, context) => {
   if (d.getDay() === 5 && d.getHours() >= 17) {
     // 获取所有有标记记录的用户
     const markedUsers = await db.collection('decision_logs')
-      .aggregate([{ $group: { _id: '$_openid' } }])
+      .aggregate()
+      .group({ _id: '$_openid' })
       .end();
 
     for (const { _id: openid } of markedUsers.data) {
       try {
-        await cloud.callFunction({ name: 'personality', data: { action: 'recalculate', period: 'weekly' } });
+        await cloud.callFunction({
+          name: 'personality',
+          data: { action: 'recalculate', period: 'weekly' },
+        });
       } catch {
-        // 静默忽略单用户失败
+        // 单用户失败静默忽略
       }
     }
   }
@@ -82,7 +100,7 @@ exports.main = async (event, context) => {
     code: 0,
     message: 'success',
     data: {
-      notified_users: Object.keys(userMap).length,
+      notified_users: notifiedCount,
       expired_count: expiredRecords.data.length,
       timestamp: now,
     },
