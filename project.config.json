@@ -5,7 +5,7 @@
     "urlCheck": false,
     "es6": true,
     "enhance": true,
-    "typescript": true,
+    "typescript": false,
     "postcss": true,
     "minified": true,
     "newFeature": true,
@@ -62,5 +62,6 @@
     "extAppid": "wxf80d3193e000946f",
     "cloudBaseExtensionRoot": "cloudbaserc",
     "version": "1.0.0"
-  }
+  },
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }

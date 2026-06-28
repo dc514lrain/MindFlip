@@ -53,6 +53,7 @@
   },
   "lazyCodeLoading": "requiredComponents",
   "renderer": "skyline",
+  "componentFramework": "glass-easel",
   "rendererOptions": {
     "skyline": {
       "defaultDisplayBlock": true,

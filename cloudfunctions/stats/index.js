@@ -7,31 +7,28 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 
 exports.main = async (event, context) => {
   const { OPENID } = cloud.getWXContext();
+
   if (!OPENID) return { code: 401, message: '未登录', data: null, server_time: Date.now() };
 
   const db = cloud.database();
   const { scope, tool_id } = event;
 
   if (scope === 'global') {
-    // 全局统计概览
-    const allRecords = await db.collection('decision_logs')
-      .where({ _openid: OPENID })
-      .get();
-
+    const allRecords = await db.collection('decision_logs').where({ _openid: OPENID }).get();
     const records = allRecords.data;
     const total = records.length;
+
     const followed = records.filter(r => r.follow_status === 'followed').length;
     const notFollowed = records.filter(r => r.follow_status === 'not_followed').length;
     const pending = records.filter(r => r.follow_status === 'pending').length;
     const expired = records.filter(r => r.follow_status === 'expired').length;
+
     const followRate = total > 0 ? Math.round((followed / (followed + notFollowed || 1)) * 100) : 0;
 
-    // 工具使用分布
-    const toolDist: Record<string, number> = {};
+    const toolDist = {};
     records.forEach(r => { toolDist[r.tool_type] = (toolDist[r.tool_type] || 0) + 1; });
 
-    // break_reason 分布
-    const breakReasonDist: Record<string, number> = {};
+    const breakReasonDist = {};
     records.filter(r => r.break_reason).forEach(r => {
       breakReasonDist[r.break_reason] = (breakReasonDist[r.break_reason] || 0) + 1;
     });
@@ -52,7 +49,6 @@ exports.main = async (event, context) => {
   }
 
   if (scope === 'tool') {
-    // 单工具统计
     if (!tool_id) return { code: 422, message: '缺少 tool_id', data: null, server_time: Date.now() };
 
     const records = await db.collection('decision_logs')
@@ -65,17 +61,16 @@ exports.main = async (event, context) => {
     const notFollowed = records.data.filter(r => r.follow_status === 'not_followed').length;
     const followRate = (followed + notFollowed) > 0 ? Math.round((followed / (followed + notFollowed)) * 100) : 0;
 
-    // 时间热力图 7×24
-    const heatmap: number[][] = Array.from({ length: 7 }, () => new Array(24).fill(0));
+    // 时间热力图 7×24（周一=0）
+    const heatmap = Array.from({ length: 7 }, () => new Array(24).fill(0));
     records.data.forEach(r => {
       const d = new Date(r.created_at);
-      const day = (d.getDay() + 6) % 7; // 周一=0
+      const day = (d.getDay() + 6) % 7;
       const hour = d.getHours();
       heatmap[day][hour]++;
     });
 
-    // 结果分布
-    const dist: Record<string, number> = {};
+    const dist = {};
     records.data.forEach(r => { dist[r.raw_result] = (dist[r.raw_result] || 0) + 1; });
 
     return {

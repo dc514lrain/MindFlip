@@ -80,7 +80,7 @@ exports.main = async (event, context) => {
     if (users.data.length > 0) {
       // 老用户：更新登录时间，若传入新昵称/头像也一并更新
       user = users.data[0];
-      const updateData: Record<string, unknown> = {
+      const updateData = {
         last_login_at: now,
         updated_at: now,
       };

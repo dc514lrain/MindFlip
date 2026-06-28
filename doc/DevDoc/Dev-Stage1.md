@@ -251,56 +251,57 @@ function computePrimaryTag(stats) {
 #### 云函数 6: `subscribe/index.js`
 
 **文件:** `cloudfunctions/subscribe/index.js`  
-**当前状态:** 仅有空壳  
-**需实现:**
+**当前状态:** ✅ 已完成（模板 ID 已确认，`send_push` 支持双模板）
 
+**已确认的订阅消息模板:**
+
+| 模板 | 模板 ID | 字段 | 用途 |
+|------|---------|------|------|
+| 待办事项提醒 | `00_yc3if3s1BFTytpy49f2P8_tElEc3DibxcNzN5d88` | thing1 / number2 / thing3 | 24h 决策复盘聚合推送 |
+| 测评报告生成通知 | `EVk9xTAqm-Fb8Sp_VQTv55ZypUcEpAGJxq7rJOiBLSM` | thing1 / phrase2 / thing3 | 每周五人格周刊出刊通知 |
+
+**`send_push` 字段映射逻辑（已实现）:**
 ```javascript
-// 两个 action: 'update_auth', 'send_push' (内部)
-//
-// action='update_auth':
-//   1. 更新 subscribe_config 集合中该用户的授权状态
-//   2. is_authorized=true: 重置 rejected_count, banner_skip_count
-//   3. is_authorized=false: rejected_count += 1
-//
-// action='send_push' (由 scheduler 云函数内部调用):
-//   使用 cloud.openapi.subscribeMessage.send 发送订阅消息
-//   参数: { touser: openid, templateId, data, page: 'pages/review/review' }
-```
+// template_type='inbox' → 模板 1
+thing1: '决策复盘提醒'
+number2: count (pending 数量)
+thing3: '点击完成复盘标记'
 
-**验收标准:**
-- [ ] update_auth 正确更新授权状态
-- [ ] send_push 成功发送订阅消息 (需先在微信后台申请模板)
+// template_type='weekly' → 模板 2
+thing1: '个人决策行为周刊'
+phrase2: tag_name (如 "绝对理性派 🎯")
+thing3: '点击查看本周完整报告'
+```
 
 ---
 
 #### 云函数 7: `scheduler/index.js`
 
 **文件:** `cloudfunctions/scheduler/index.js` + `config.json`  
-**当前状态:** `config.json` 已有定时触发器配置 (每天 9:00)，`index.js` 需实现  
-**需实现:**
+**当前状态:** ✅ 已完成（`config.json` 定时器已配置每天 9:00，`index.js` 已实现三段式逻辑）
 
+**已实现的执行流程:**
 ```javascript
-// 由定时触发器自动调用 (不需要客户端触发)
+// 1. 24h 复盘推送 (模板 1: 待办事项提醒)
+//    查询 pending 记录 → 按用户聚合 → 过滤未授权 → 逐用户推送
+//    参数: { action:'send_push', touser, count, template_type:'inbox' }
 //
-// 1. 查询 decision_logs:
-//    follow_status='pending', 24h <= now-created_at < 48h
-//    按 _openid 聚合
+// 2. 48h 过期自动标记
+//    pending 且 created_at < now-48h → follow_status='expired'
 //
-// 2. 过滤: 跳过 subscribe_config.is_authorized=false 的用户
-//
-// 3. 逐用户调用 cloud.openapi.subscribeMessage.send
-//    文案: "你有 {N} 个决定等待复盘"
-//    跳转: pages/review/review
-//
-// 4. 将超过 48h 的 pending 记录批量更新为 expired
-//
-// 5. 如果是周五 17:00，额外触发人格标签周结算
+// 3. 每周五人格周刊推送 (模板 2: 测评报告生成通知)
+//    仅在 d.getDay() === 5 时执行
+//    → 触发 personality 云函数计算
+//    → 向已授权用户推送周刊
+//    参数: { action:'send_push', touser, template_type:'weekly', tag_name }
 ```
 
 **验收标准:**
-- [ ] 定时触发器按 cron 准时执行
-- [ ] 聚合推送只发送给已授权用户
-- [ ] 过期标记正确
+- [ ] 定时触发器按 cron 准时执行（每天 9:00）
+- [ ] 24h 复盘推送只发送给已授权用户，字段填充符合模板 1 规范
+- [ ] 48h 过期标记正确
+- [ ] 周五附加周刊推送，字段填充符合模板 2 规范
+- [ ] 单用户推送失败不影响其他用户
 
 ---
 
@@ -949,8 +950,8 @@ cloudfunctions/
 ├── inbox/index.js               ← 从头实现
 ├── stats/index.js               ← 从头实现
 ├── personality/index.js         ← 从头实现
-├── subscribe/index.js           ← 从头实现
-└── scheduler/index.js           ← 从头实现
+├── subscribe/index.js           ← ✅ 已完成 (模板 ID 已确认)
+└── scheduler/index.js           ← ✅ 已完成 (三段式逻辑 + 双模板推送)
 
 miniprogram/
 ├── core/stores/InboxStore.ts     ← 移除 TODO，接入 dataService

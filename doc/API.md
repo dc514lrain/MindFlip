@@ -370,16 +370,38 @@ interface UpdateSubscribeRequest {
 
 ```typescript
 // 不直接暴露给客户端。由 scheduler 定时触发器调用。
-// 内部使用 cloud.openapi.subscribeMessage.send
-interface SendPushInternal {
-  openid: string;
-  template_id: string;       // 微信订阅消息模板 ID
+// 根据 template_type 自动选择模板和字段映射
+
+// ═══ 模板 1: 待办事项提醒 ═══
+// 模板 ID: 00_yc3if3s1BFTytpy49f2P8_tElEc3DibxcNzN5d88
+// 用途: 24h 决策复盘聚合推送
+interface SendInboxPush {
+  action: 'send_push';
+  template_type: 'inbox';
+  touser: string;                     // OpenID
+  count: number;                      // pending 数量
+  page: 'pages/review/review';
   data: {
-    thing1: { value: string };  // 决策数量: "3 个决定"
-    time2: { value: string };   // 时间范围: "过去 24 小时"
-    thing3: { value: string };  // 引导文案: "点击完成复盘标记"
+    thing1: { value: string };       // 待办名称: "决策复盘提醒"
+    number2: { value: number };      // 待办事项数量: count
+    thing3: { value: string };       // 备注: "点击完成复盘标记"
   };
-  page: string;              // 点击跳转: "pages/review/review"
+}
+
+// ═══ 模板 2: 测评报告生成通知 ═══
+// 模板 ID: EVk9xTAqm-Fb8Sp_VQTv55ZypUcEpAGJxq7rJOiBLSM
+// 用途: 每周五人格周刊出刊通知
+interface SendWeeklyPush {
+  action: 'send_push';
+  template_type: 'weekly';
+  touser: string;                     // OpenID
+  tag_name: string;                   // 人格标签名称 (如 "绝对理性派")
+  page: 'pages/review/review';
+  data: {
+    thing1: { value: string };       // 测评项目: "个人决策行为周刊"
+    phrase2: { value: string };      // 测评结果: tag_name
+    thing3: { value: string };       // 备注: "点击查看本周完整报告"
+  };
 }
 ```
 
@@ -396,24 +418,20 @@ interface SendPushInternal {
 **执行流程:**
 
 ```
-1. 查询 decision_logs:
-   - follow_status = 'pending'
-   - 24h <= (now - created_at) < 48h
+1. 24h 复盘推送 (模板 1: 待办事项提醒):
+   - 查询 decision_logs: follow_status='pending', 24h <= (now-created_at) < 48h
    - 按 _openid 聚合
+   - 过滤: 跳过 subscribe_config.is_authorized = false 的用户
+   - 逐用户推送，字段映射: thing1='决策复盘提醒', number2=count, thing3='点击完成复盘标记'
 
-2. 过滤: 跳过 subscribe_config.is_authorized = false 的用户
+2. 48h 过期自动标记:
+   - 查询 decision_logs: follow_status='pending', (now-created_at) >= 48h
+   → 批量更新 status='expired', expired_at=now
 
-3. 逐用户调用 cloud.openapi.subscribeMessage.send
-
-4. 查询 decision_logs:
-   - follow_status = 'pending'
-   - (now - created_at) >= 48h
-   → 批量更新 status = 'expired', expired_at = now
-
-5. 每周五 17:00 额外执行:
-   → 调用 personality 计算逻辑
-   → 生成 weekly 快照
-   → 推送周刊消息
+3. 每周五人格周刊推送 (模板 2: 测评报告生成通知):
+   - 仅在 d.getDay() === 5 时执行
+   → 调用 personality 云函数计算 weekly 标签
+   → 向已授权用户推送，字段映射: thing1='个人决策行为周刊', phrase2=tag_name, thing3='点击查看本周完整报告'
 ```
 
 **注意:** 微信订阅消息发送需小程序的类目资质审核通过。模板文案必须使用"服务通知"类目的标准模板，禁止包含营销内容。
